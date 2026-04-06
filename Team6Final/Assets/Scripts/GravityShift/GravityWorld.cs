@@ -1,13 +1,19 @@
 using UnityEngine;
 
-// Current "up" direction; Physics.gravity pulls along -Up. Default matches standard Unity (+Y up, gravity -Y).
+// Stores which direction is up for the whole game right now
+// Physics.gravity is set to point opposite that direction so the player falls the right way on walls
 public class GravityWorld
 {
+    // Current up direction in world space starts as normal Y+
     public static Vector3 Up { get; private set; } = Vector3.up;
 
+    // Call this when the player shifts to a new surface. updates Up and global gravity
     public static void SetGravityUp(Vector3 worldUp)
     {
+        // Normalize so length is always 1
         Up = worldUp.normalized;
-        Physics.gravity = -Up * 9.81f; // can make 9.8 a variable to adjust gravity
+
+        // sets global gravity using custom up
+        Physics.gravity = -Up * 9.81f;
     }
 }
