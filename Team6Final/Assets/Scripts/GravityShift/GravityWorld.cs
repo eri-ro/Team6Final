@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Current "up" direction; Physics.gravity pulls along -Up.
+// Current "up" direction; Physics.gravity pulls along -Up. Default matches standard Unity (+Y up, gravity -Y).
 public class GravityWorld
 {
     public static Vector3 Up { get; private set; } = Vector3.up;
