@@ -1284,6 +1284,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1488250229093330312, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
+      propertyPath: dashKey
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1488250229093330312, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
+      propertyPath: abilityMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1488250229093330312, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
+      propertyPath: chargeJumpMin
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1488250229093330312, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
+      propertyPath: chargeJumpMaxTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1488250229093330312, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
+      propertyPath: isChargeJumpEnabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5970190581660174543, guid: 683f46e64367ee84fad46953a05e0718, type: 3}
       propertyPath: m_Name
       value: Player

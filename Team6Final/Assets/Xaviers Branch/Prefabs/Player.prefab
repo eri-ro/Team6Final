@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 1461185134506092919}
   - component: {fileID: 7843643968987587601}
   - component: {fileID: 5447207087750434044}
+  - component: {fileID: 1488250229093330312}
   - component: {fileID: 7423728807502511718}
   m_Layer: 0
   m_Name: Player
@@ -190,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba30017ac17f1041a92663c2d9cb84c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  abilities: {fileID: 1488250229093330312}
   walkSpeed: 5
   sprintMultiplier: 2
   jumpForce: 7
@@ -202,6 +204,36 @@ MonoBehaviour:
   cameraTransform: {fileID: 1709970529152308626}
   localUp: {x: 0, y: 1, z: 0}
   currentGravityField: {fileID: 0}
+--- !u!114 &1488250229093330312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5970190581660174543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efaf3208c3e215d4b92cee001ee5e327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 5447207087750434044}
+  isChargeJumpEnabled: 1
+  abilityMode: 0
+  chargeJumpMin: 5
+  chargeJumpMax: 25
+  chargeJumpMaxTime: 1.5
+  glideGravityScale: 0.15
+  glideMaxFallSpeed: 1.5
+  dashMode: 0
+  dashForce: 400
+  dashDuration: 0.5
+  dashCooldown: 0.1
+  maxAirDashes: 4
+  dashKey: 99
+  groundCheckDistance: 0.6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!65 &7423728807502511718
 BoxCollider:
   m_ObjectHideFlags: 0

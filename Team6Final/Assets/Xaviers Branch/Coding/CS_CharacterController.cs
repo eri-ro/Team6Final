@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class CS_GravityCharacterController : MonoBehaviour
 {
+    public CS_PlayerAbilities abilities; // reference to the player's abilities (for checking if glide/charge jump is active)
     [Header("Movement Settings")]
     public float walkSpeed = 5f;          // base movement speed
     public float sprintMultiplier = 2f;   // how much faster sprinting is
@@ -68,7 +69,7 @@ public class CS_GravityCharacterController : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, gravityDir, groundCheckDistance, groundLayer);
 
         // Jump — only works if grounded
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && !abilities.isChargeJumpEnabled)
             rb.AddForce(-gravityDir * jumpForce, ForceMode.Impulse);
     }
 
