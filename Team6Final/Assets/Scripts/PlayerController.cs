@@ -10,8 +10,19 @@ public class PlayerController : MonoBehaviour
     public float interactRayHeight = 1f;
     public float cameraDistance = 4.5f;
 
+    
     CharacterController _cc;
     Vector3 _velocity;
+    
+    public enum AbilityState
+    {
+        None,
+        Dash,
+        HighJump,
+        GravityShift
+    }
+
+    public AbilityState ability;
 
     void Awake()
     {
@@ -20,9 +31,18 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(GravityWorld.Up, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
+        Move();
         TryShiftGravity();
+    }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
+    void Move()
+    {
+        transform.Rotate(GravityWorld.Up, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
         Vector3 up = GravityWorld.Up;
         Vector3 forward = FlattenOnSurface(transform.forward, up);
         Vector3 right = FlattenOnSurface(transform.right, up);
@@ -83,4 +103,5 @@ public class PlayerController : MonoBehaviour
             f = Vector3.Cross(up, Vector3.forward);
         return f.normalized;
     }
+    
 }
