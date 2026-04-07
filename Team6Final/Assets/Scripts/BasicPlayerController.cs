@@ -39,6 +39,9 @@ public class BasicPlayerController : MonoBehaviour
     // Which key fires the currently selected ability (dash, gravity shift, etc.)
     public KeyCode abilityKey = KeyCode.Mouse0;
 
+    // Public grounded variable for testing
+    public bool groundCheck;
+
     // Which ability is active when you press the ability key
     public enum AbilityState
     {
@@ -92,6 +95,8 @@ public class BasicPlayerController : MonoBehaviour
         Move();
         UseAbility();
         ChangeAbility();
+
+        groundCheck = _cc.isGrounded; // checking grounded variable for testing
     }
 
     // Handles escape key, mouse look, WASD, camera orbit
@@ -198,6 +203,7 @@ public class BasicPlayerController : MonoBehaviour
         // One Move call: sideways from input, vertical from _standaloneVelocity
         _cc.Move(planarDelta + _standaloneVelocity * Time.deltaTime);
 
+
         // After landing remove any leftover downward speed along up
         if (_cc.isGrounded && Vector3.Dot(_standaloneVelocity, up) < 0f)
             _standaloneVelocity = Vector3.ProjectOnPlane(_standaloneVelocity, up);
@@ -227,6 +233,7 @@ public class BasicPlayerController : MonoBehaviour
                 _gravityShift?.TryExecuteShift();
                 break;
             default:
+                Debug.Log("No ability selected");
                 break;
         }
     }
@@ -235,12 +242,27 @@ public class BasicPlayerController : MonoBehaviour
     void ChangeAbility()
     {
         if (Input.GetKeyDown(KeyCode.Z))
+        {
             ability = AbilityState.Dash;
+            Debug.Log("Dash Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.X))
+        {
             ability = AbilityState.HighJump;
+            Debug.Log("High Jump Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.C))
+        {
             ability = AbilityState.GravityShift;
+            Debug.Log("Gravity Shift Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.V))
+        {
             ability = AbilityState.None;
+            Debug.Log("Abilities Disabled");
+        }
     }
 }
