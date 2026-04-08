@@ -58,10 +58,19 @@ public class PlayerGravityOrientation : MonoBehaviour
         Vector3 planarMove = (right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical")).normalized * (_player.moveSpeed * Time.deltaTime);
         _motor?.Tick(planarMove);
 
-        // Third-person camera: same idea as BasicPlayerController but uses GravityWorld.Up
+        // Third-person camera with wall collision (matches BasicPlayerController)
         Vector3 focus = transform.position + up * _player.focusHeight;
-        Vector3 camPos = focus - cameraLook * _player.cameraDistance + up * _player.cameraHeightBias;
-        cam.transform.position = camPos;
-        cam.transform.rotation = Quaternion.LookRotation((focus - camPos).normalized, up);
+        PlayerOrbitCamera.Place(
+            cam,
+            transform,
+            focus,
+            cameraLook,
+            up,
+            _player.cameraDistance,
+            _player.cameraHeightBias,
+            _player.cameraCollisionMinDistance,
+            _player.cameraCollisionWallPadding,
+            _player.cameraCollisionCastStart,
+            _player.cameraObstacleMask);
     }
 }

@@ -23,6 +23,15 @@ public class BasicPlayerController : MonoBehaviour
     // Small vertical offset so the camera is not exactly on the same height as the focus
     public float cameraHeightBias = 0.15f;
 
+    // When a wall blocks the orbit camera, pull in toward the focus; at min distance it is nearly first-person
+    public float cameraCollisionMinDistance = 0.12f;
+    // Gap left between camera and wall hit
+    public float cameraCollisionWallPadding = 0.12f;
+    // Start the ray this far from the focus toward the camera so we do not hit the player capsule first
+    public float cameraCollisionCastStart = 0.35f;
+    // What layers block the camera (default: everything)
+    public LayerMask cameraObstacleMask = ~0;
+
     // Upward push when jumping
     public float jumpForce = 6f;
 
@@ -157,11 +166,20 @@ public class BasicPlayerController : MonoBehaviour
         // Actually move the CharacterController
         TickMovement(planar);
 
-        // Place the camera behind the player
+        // Third-person with collision pull-in (first-person when space is tight)
         Vector3 focus = transform.position + up * focusHeight;
-        Vector3 camPos = focus - cameraLook * cameraDistance + up * cameraHeightBias;
-        playerCamera.transform.position = camPos;
-        playerCamera.transform.rotation = Quaternion.LookRotation((focus - camPos).normalized, up);
+        PlayerOrbitCamera.Place(
+            playerCamera,
+            transform,
+            focus,
+            cameraLook,
+            up,
+            cameraDistance,
+            cameraHeightBias,
+            cameraCollisionMinDistance,
+            cameraCollisionWallPadding,
+            cameraCollisionCastStart,
+            cameraObstacleMask);
     }
 
     // Applies horizontal motion plus jump/gravity for this frame
