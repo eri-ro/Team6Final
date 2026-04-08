@@ -13,8 +13,8 @@ public class DashAbility : MonoBehaviour
     bool isDashing;                             // If the player is dashing
     bool canBreakObstacles;                     // If the player can break obstacles with the dash
 
-    // Start is called before the first frame update
-    void Start()
+    // Awake is called when the script instance is being loaded
+    void Awake()
     {
         playerController = GetComponent<BasicPlayerController>();
         _cc = GetComponent<CharacterController>();
@@ -32,6 +32,9 @@ public class DashAbility : MonoBehaviour
 
     public void UseAbility()
     {
+        if (_cc == null || playerController == null)
+            return;
+
         if (_cc.isGrounded)
         {
             dashTime = 0.5f;
