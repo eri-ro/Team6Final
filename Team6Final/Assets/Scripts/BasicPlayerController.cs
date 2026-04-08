@@ -239,8 +239,10 @@ public class BasicPlayerController : MonoBehaviour
     }
 
     // keyboard hotkeys to swap abilities
+    int abilityIndex = 0;
     void ChangeAbility()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Z))
         {
             ability = AbilityState.Dash;
@@ -263,6 +265,29 @@ public class BasicPlayerController : MonoBehaviour
         {
             ability = AbilityState.None;
             Debug.Log("Abilities Disabled");
+        }*/
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            switch (abilityIndex)
+            {
+                case 0:
+                    ability = AbilityState.Dash;
+                    abilityIndex++;
+                    break;
+                case 1:
+                    ability = AbilityState.HighJump;
+                    abilityIndex++;
+                    break;
+                case 2:
+                    ability = AbilityState.GravityShift;
+                    abilityIndex++;
+                    break;
+                case 3:
+                    ability = AbilityState.None;
+                    abilityIndex = 0;
+                    break;
+            }
         }
+        
     }
 }
