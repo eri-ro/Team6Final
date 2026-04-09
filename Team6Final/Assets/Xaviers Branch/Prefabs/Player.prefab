@@ -198,7 +198,7 @@ MonoBehaviour:
   groundCheckDistance: 0.6
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   rotationSpeed: 10
   upAlignSpeed: 5
   cameraTransform: {fileID: 1709970529152308626}
@@ -233,7 +233,7 @@ MonoBehaviour:
   groundCheckDistance: 0.6
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
 --- !u!65 &7423728807502511718
 BoxCollider:
   m_ObjectHideFlags: 0
