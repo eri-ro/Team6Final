@@ -1,14 +1,14 @@
 using UnityEngine;
 
-// When BasicPlayerController.enableGravityShift is true, this script runs instead of BasicPlayerController.Move
-// It rotates the player around GravityWorld.Up, handles mouse pitch, orbit camera, and sends walk input to the motor
+// When BasicPlayerController.enableGravityShift is true, this runs instead of BasicPlayerController.Move.
+// It uses GravityWorld.Up for yaw, pitch, orbit camera, and sends walk velocity to PlayerGravityMotor.
 [DisallowMultipleComponent]
 public class PlayerGravityOrientation : MonoBehaviour
 {
     BasicPlayerController _player;
     PlayerGravityMotor _motor;
 
-    // Stored vertical look angle between frames (degrees)
+    // Up/down look angle in degrees, stored between frames.
     float _pitch;
 
     void Awake()
@@ -19,7 +19,6 @@ public class PlayerGravityOrientation : MonoBehaviour
 
     void Update()
     {
-        // No player script or gravity mode off: do nothing
         if (_player == null || !_player.enableGravityShift)
             return;
 
@@ -29,12 +28,12 @@ public class PlayerGravityOrientation : MonoBehaviour
 
         bool lookEnabled = Cursor.lockState == CursorLockMode.Locked;
 
-        // Up comes from GravityWorld, not always Vector3.up
+        // After a gravity shift, "up" is not always Vector3.up.
         Vector3 up = GravityWorld.Up;
 
         if (lookEnabled)
         {
-            // Spin around the current gravity up axis
+            // Yaw around the current gravity up axis.
             transform.Rotate(up, Input.GetAxis("Mouse X") * _player.lookSensitivity, Space.World);
 
             float mouseY = Input.GetAxis("Mouse Y") * _player.lookSensitivity;
@@ -42,7 +41,7 @@ public class PlayerGravityOrientation : MonoBehaviour
             _pitch = Mathf.Clamp(_pitch, _player.minPitch, _player.maxPitch);
         }
 
-        // Build forward/right flat on the surface you are standing on
+        // Build walk directions that lie flat on the surface you are standing on.
         Vector3 flatForward = GravityAlignment.FlattenOnSurface(transform.forward, up);
         Vector3 forward = flatForward.sqrMagnitude > 1e-8f ? flatForward.normalized : Vector3.ProjectOnPlane(Vector3.forward, up).normalized;
         Vector3 right = Vector3.Cross(up, forward);
@@ -50,15 +49,15 @@ public class PlayerGravityOrientation : MonoBehaviour
             right = GravityAlignment.FlattenOnSurface(transform.right, up);
         right.Normalize();
 
-        // Pitch the view around the sideways axis for orbit camera direction
+        // Orbit camera direction: pitch around the sideways axis.
         Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
         Vector3 cameraLook = (pitchRot * forward).normalized;
 
-        // Same WASD input as flat mode, but axes follow the wall
-        Vector3 planarMove = (right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical")).normalized * (_player.moveSpeed * Time.deltaTime);
-        _motor?.Tick(planarMove);
+        // Same WASD as flat mode, but axes follow the wall or floor.
+        Vector3 wishVel = (right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical")).normalized * _player.moveSpeed;
+        _motor?.SetMoveVelocity(wishVel);
 
-        // Third-person camera with wall collision (matches BasicPlayerController)
+        // Third-person camera with wall collision.
         Vector3 focus = transform.position + up * _player.focusHeight;
         PlayerOrbitCamera.Place(
             cam,

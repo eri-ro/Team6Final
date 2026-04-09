@@ -1,73 +1,76 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// Temporary speed boost while dashing. Multiplies BasicPlayerController.moveSpeed for a short time.
+// Put a trigger collider on the player if you want to break objects tagged Breakable while dashing on the ground.
 public class DashAbility : MonoBehaviour
 {
-    // Declare variables
-    
-    BasicPlayerController playerController;     // Basic Player Controller script component
-    CharacterController _cc;                    // The character controller component
-    float dashBoost = 5f;                       // Speed multiplier
-    float dashTime;                             // Dash duration
-    bool isDashing;                             // If the player is dashing
-    bool canBreakObstacles;                     // If the player can break obstacles with the dash
+    // Used to read and change move speed during the dash.
+    BasicPlayerController playerController;
 
-    // Awake is called when the script instance is being loaded
+    // Used to know if the player is on the ground.
+    PlayerGravityMotor _motor;
+
+    // How many times stronger than normal speed the dash is.
+    float dashBoost = 5f;
+
+    // How long one dash lasts in seconds.
+    float dashTime;
+
+    // True while the coroutine is running so we know we are in the dash window.
+    bool isDashing;
+
+    // True only when dashing and grounded so breakable objects can be destroyed on trigger.
+    bool canBreakObstacles;
+
     void Awake()
     {
         playerController = GetComponent<BasicPlayerController>();
-        _cc = GetComponent<CharacterController>();
+        _motor = GetComponent<PlayerGravityMotor>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Check if the player is on the ground while dashing. The player can only break obstacles while dashing on the ground.
-        if (isDashing && _cc.isGrounded)
+        // Ground check: same helper the motor uses for jump / gravity.
+        bool grounded = _motor != null && _motor.IsGroundedForLogic();
+        if (isDashing && grounded)
             canBreakObstacles = true;
         else
             canBreakObstacles = false;
     }
 
+    // Called from BasicPlayerController when Dash is the selected ability and the ability key is pressed.
     public void UseAbility()
     {
-        if (_cc == null || playerController == null)
+        if (playerController == null)
             return;
 
-        if (_cc.isGrounded)
+        if (_motor != null && _motor.IsGroundedForLogic())
         {
             dashTime = 0.5f;
             Debug.Log("Ground Dash!");
         }
-        else if (!_cc.isGrounded)
+        else if (_motor != null && !_motor.IsGroundedForLogic())
         {
             dashTime = 0.5f;
             Debug.Log("Air Dash!");
         }
+        else
+        {
+            dashTime = 0.5f;
+            Debug.Log("Dash!");
+        }
+
         StartDash(dashTime);
     }
 
+    // Starts the timed speed boost coroutine.
     void StartDash(float duration)
     {
-        IEnumerator DashRoutine = DashBoost(duration);
-        StartCoroutine(DashRoutine);
+        StartCoroutine(DashBoost(duration));
     }
 
-    /* leaving this code here incase we might need it
-    void GroundDash()
-    {
-        dashTime = 0.5f;
-        StartDash(dashTime);
-    }
-
-    void AirDash()
-    {
-        dashTime = 0.5f;
-        StartDash(dashTime);
-    }
-    */
-
+    // Waits for duration seconds, then restores move speed. While running, isDashing is true.
     IEnumerator DashBoost(float duration)
     {
         isDashing = true;
@@ -77,6 +80,7 @@ public class DashAbility : MonoBehaviour
         isDashing = false;
     }
 
+    // If another object has a trigger collider and the Breakable tag, destroy it when we dash into it on the ground.
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Breakable" && canBreakObstacles)

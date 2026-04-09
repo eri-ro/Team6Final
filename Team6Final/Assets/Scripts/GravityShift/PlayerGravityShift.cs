@@ -1,39 +1,32 @@
 using UnityEngine;
 
-// Raycasts from the camera center to find a tagged wall, then changes GravityWorld.Up and snaps the player to that surface
-// BasicPlayerController calls TryExecuteShift when GravityShift is the selected ability and the ability key is pressed
+// Raycasts from the camera, sets GravityWorld.Up, rotates the player, snaps the Rigidbody to the surface.
+// Vector3.Slerp is best for blending unit directions (e.g. old gravity up -> new up). For world positions use Vector3.Lerp
+// or Vector3.SmoothDamp. Quaternion.Slerp blends rotations smoothly. This script snaps instantly so physics stays consistent.
 public class PlayerGravityShift : MonoBehaviour
 {
-    // How many ray hits we can collect in one cast
     const int RaycastBufferSize = 32;
 
-    // Max ray length from the eye toward the crosshair
     public float wallInteractDistance = 4f;
-
-    // If there is no camera, ray starts this high above the player's feet using transform.forward
     public float interactRayHeight = 1f;
-
-    // Only colliders with this tag (on self or a parent) count as valid shift targets
     public string gravityShiftSurfaceTag = "GravitySurface";
 
-    CharacterController _cc;
+    Rigidbody _rb;
+    CapsuleCollider _cap;
     BasicPlayerController _player;
     PlayerGravityMotor _motor;
-
-    // Reused buffer for Physics.RaycastNonAlloc
     readonly RaycastHit[] _rayHits = new RaycastHit[RaycastBufferSize];
 
     void Awake()
     {
-        _cc = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
+        _cap = GetComponent<CapsuleCollider>();
         _player = GetComponent<BasicPlayerController>();
         _motor = GetComponent<PlayerGravityMotor>();
     }
 
-    // Called from BasicPlayerController when the player uses the gravity shift ability
     public void TryExecuteShift()
     {
-        // wall mode is off shifting is not allowed
         if (_player != null && !_player.enableGravityShift)
             return;
 
@@ -45,58 +38,41 @@ public class PlayerGravityShift : MonoBehaviour
 
         if (cam != null)
         {
-            // Ray from center of the screen
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             origin = ray.origin;
             dir = ray.direction.normalized;
-
-            // Camera sits behind the player, so extend reach so walls in front are still hittable
             if (_player != null)
                 maxRayDistance += _player.cameraDistance;
         }
         else
         {
-            // Fallback: shoot from body height along flattened forward
             origin = transform.position + up * interactRayHeight;
             dir = GravityAlignment.FlattenOnSurface(transform.forward, up);
         }
 
-        // Nothing valid hit
         if (!TryFindShiftTarget(origin, dir, maxRayDistance, out RaycastHit hit))
             return;
 
-        // New "outward" normal from the wall; we want gravity to pull toward the wall, so up = away from inside the wall
         Vector3 oldUp = GravityWorld.Up;
         Vector3 newUp = hit.normal.normalized;
-
-        // If the normal points the same way as the ray, flip it so we stick to the outside of the surface
         if (Vector3.Dot(newUp, dir) > 0f)
             newUp = -newUp;
 
-        // Clean up noisy normals from mesh edges and align big planes to their transform when close enough
         newUp = ResampleWalkableNormal(hit.collider, hit.point, newUp);
         newUp = AlignWalkableUpToPlaneOrientation(hit.collider, newUp);
 
-        // Tell the whole game which way is up and update Physics.gravity
         GravityWorld.SetGravityUp(newUp);
 
         Vector3 nu = GravityWorld.Up;
-
-        // Pick a forward direction that lies on the new floor plane so the player does not spin wildly
         Vector3 fwd = ForwardOnTangentPlane(nu, oldUp, dir);
         ApplyRotationWithExactUp(fwd, nu);
 
-        // Turning off the controller avoids fighting the teleport while we adjust position
-        _cc.enabled = false;
         SnapCapsuleToSurface(hit, nu);
-        _cc.enabled = true;
 
-        // Old fall speed would feel wrong on the new wall
         _motor?.ClearVelocity();
         Physics.SyncTransforms();
     }
 
-    // Fire a short ray inside the collider to get a stable normal
     static Vector3 ResampleWalkableNormal(Collider col, Vector3 hitPoint, Vector3 preliminaryOutward)
     {
         if (col == null)
@@ -111,7 +87,6 @@ public class PlayerGravityShift : MonoBehaviour
         return n;
     }
 
-    // If the collider's transform up almost matches physics normal, trust the transform
     static Vector3 AlignWalkableUpToPlaneOrientation(Collider col, Vector3 physicsUp)
     {
         if (col == null)
@@ -125,12 +100,10 @@ public class PlayerGravityShift : MonoBehaviour
         return physicsUp;
     }
 
-    // Builds a forward vector on the plane perpendicular to nu using camera/player direction
     Vector3 ForwardOnTangentPlane(Vector3 nu, Vector3 oldUp, Vector3 shiftRayDir)
     {
         nu = nu.normalized;
 
-        // Pick a reference axis not parallel to nu so Cross products are stable
         Vector3 refAxis = Vector3.up;
         if (Mathf.Abs(Vector3.Dot(refAxis, nu)) > 0.92f)
             refAxis = Vector3.right;
@@ -144,7 +117,6 @@ public class PlayerGravityShift : MonoBehaviour
         Vector3 t1 = Vector3.Cross(nu, t0);
         t1.Normalize();
 
-        // Project a 3D direction onto the tangent plane spanned by t0, t1
         bool TryCombine(Vector3 v, out Vector3 onPlane)
         {
             Vector3 p = t0 * Vector3.Dot(v, t0) + t1 * Vector3.Dot(v, t1);
@@ -171,7 +143,6 @@ public class PlayerGravityShift : MonoBehaviour
         return t0;
     }
 
-    // Sets rotation so transform.up matches the new gravity up and forward lies on the surface
     void ApplyRotationWithExactUp(Vector3 forwardOnPlane, Vector3 nu)
     {
         nu = nu.normalized;
@@ -182,7 +153,6 @@ public class PlayerGravityShift : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(forwardOnPlane, nu);
 
-        // Second pass fixes tiny numerical mismatch between up and nu
         if (Vector3.Angle(transform.up, nu) > 0.25f)
         {
             forwardOnPlane = Vector3.ProjectOnPlane(transform.forward, nu);
@@ -194,7 +164,6 @@ public class PlayerGravityShift : MonoBehaviour
         }
     }
 
-    // Picks the closest valid hit along the ray that is tagged and not part of this player
     bool TryFindShiftTarget(Vector3 origin, Vector3 dir, float maxDistance, out RaycastHit bestHit)
     {
         bestHit = default;
@@ -226,32 +195,73 @@ public class PlayerGravityShift : MonoBehaviour
         return found;
     }
 
-    // True if this collider belongs to the player hierarchy (ignore self-hits)
     bool IsPartOfLocalPlayer(Transform t)
     {
         return t == transform || t.IsChildOf(transform);
     }
 
-    // Moves the player along nu until the capsule bottom sits slightly above the hit plane
+    // Places feet on the collider face toward the player. Uses a short ray from inside the walkable volume
+    // so thin meshes are not tunnelled through (plane-only math could land on the far side).
     void SnapCapsuleToSurface(RaycastHit hit, Vector3 nu)
     {
+        if (_cap == null)
+            return;
+
         nu = nu.normalized;
-        Vector3 planeAnchor = hit.point;
+        Collider wall = hit.collider;
+        if (wall == null)
+            return;
 
-        // Small padding so the capsule does not intersect the wall next physics frame
-        float pad = _cc.radius + _cc.skinWidth * 2f + Physics.defaultContactOffset * 2f + 0.02f;
+        float standoff = Physics.defaultContactOffset * 2f + 0.02f;
 
-        for (int i = 0; i < 12; i++)
+        Vector3 axis = transform.up.normalized;
+        Vector3 worldCenter = transform.TransformPoint(_cap.center);
+        float half = _cap.height * 0.5f;
+        Vector3 lowest = worldCenter - axis * half;
+
+        // Start inside the "room" side of the surface so the ray hits the near face, not the far side of a thin wall.
+        Vector3 rayOrigin = hit.point + nu * Mathf.Clamp(half + 0.4f, 0.5f, 3f);
+        Vector3 rayDir = -nu;
+        const float rayLen = 8f;
+
+        int count = Physics.RaycastNonAlloc(rayOrigin, rayDir, _rayHits, rayLen, ~0, QueryTriggerInteraction.Ignore);
+        RaycastHit? best = null;
+        float bestD = float.MaxValue;
+        for (int i = 0; i < count; i++)
         {
-            Vector3 axis = transform.up.normalized;
-            Vector3 worldCenter = transform.position + transform.TransformVector(_cc.center);
-            Vector3 bottomNow = worldCenter - axis * (_cc.height * 0.5f);
-
-            float signed = Vector3.Dot(bottomNow - planeAnchor, nu);
-            float shift = pad - signed;
-            if (Mathf.Abs(shift) < 0.0005f)
-                break;
-            transform.position += nu * shift;
+            RaycastHit h = _rayHits[i];
+            if (h.collider != wall)
+                continue;
+            if (h.distance < bestD)
+            {
+                bestD = h.distance;
+                best = h;
+            }
         }
+
+        Vector3 delta;
+        if (best.HasValue)
+        {
+            Vector3 contact = best.Value.point;
+            Vector3 outFromSurface = best.Value.normal.normalized;
+            if (Vector3.Dot(outFromSurface, nu) < 0f)
+                outFromSurface = -outFromSurface;
+            Vector3 desiredLowest = contact + outFromSurface * standoff;
+            delta = desiredLowest - lowest;
+        }
+        else
+        {
+            Vector3 onSurf = wall.ClosestPoint(rayOrigin + rayDir * (rayLen * 0.5f));
+            Vector3 desiredLowest = onSurf + nu * standoff;
+            delta = desiredLowest - lowest;
+        }
+
+        if (delta.sqrMagnitude > 25f)
+            delta = delta.normalized * 5f;
+
+        if (_rb != null)
+            _rb.position += delta;
+        else
+            transform.position += delta;
     }
 }

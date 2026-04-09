@@ -1,101 +1,100 @@
 using UnityEngine;
 
-// Main player script: walking, jumping, mouse look, third-person camera, and one "use ability" button
-// If enableGravityShift is true, this script stops moving the player and PlayerGravityOrientation + PlayerGravityMotor take over
+// Main player script: mouse look, third-person camera, picking abilities, and sending move speed to the motor.
+// When enableGravityShift is true, this script skips movement here and PlayerGravityOrientation does it instead.
 public class BasicPlayerController : MonoBehaviour
 {
-    // Drag the scene camera here
+    // The camera that follows the player.
     public Camera playerCamera;
 
-    // How fast the player walks
+    // How fast the player moves in units per second.
     public float moveSpeed = 6f;
 
-    // How strong mouse movement rotates the view
+    // Mouse sensitivity for turning and looking up/down.
     public float lookSensitivity = 2f;
 
-    // How far the orbit camera sits behind the focus point
+    // Default distance from the focus point to the camera along the view ray.
     [Range(1f, 20f)]
     public float cameraDistance = 6f;
 
-    // Height of the point the camera looks at, above the player's position
+    // How far above the player root the camera looks (roughly chest/head height).
     public float focusHeight = 0.9f;
 
-    // Small vertical offset so the camera is not exactly on the same height as the focus
+    // Tiny height tweak so the camera is not exactly on the same line as the focus.
     public float cameraHeightBias = 0.15f;
 
-    // When a wall blocks the orbit camera, pull in toward the focus; at min distance it is nearly first-person
+    // When a wall blocks the camera, it can pull in this close (almost first person).
     public float cameraCollisionMinDistance = 0.12f;
-    // Gap left between camera and wall hit
+
+    // Extra space left between the camera and the wall hit so the lens does not clip.
     public float cameraCollisionWallPadding = 0.12f;
-    // Start the ray this far from the focus toward the camera so we do not hit the player capsule first
+
+    // Start the wall ray a bit toward the camera from the focus so the ray does not start inside the player capsule.
     public float cameraCollisionCastStart = 0.35f;
-    // What layers block the camera (default: everything)
+
+    // Which physics layers count as solid for camera collision (default: everything).
     public LayerMask cameraObstacleMask = ~0;
 
-    // Upward push when jumping
+    // Legacy field: jump is handled inside PlayerGravityMotor; kept for designers who might script against it.
     public float jumpForce = 6f;
 
-    // Limits for looking up/down (degrees)
+    // Limits for looking up and down in degrees so you cannot flip upside down.
     public float minPitch = -75f;
     public float maxPitch = 75f;
 
-    // If true moving the mouse up looks down
+    // If true, moving the mouse up makes the view look down (flight-sim style).
     public bool invertVerticalLook = true;
 
-    // Turn on for levels or upgrades that allow walking on walls / shifting gravity
+    // When true, wall-walk mode is on and PlayerGravityOrientation must exist on the same object.
     public bool enableGravityShift = false;
 
-    // Which key fires the currently selected ability (dash, gravity shift, etc.)
+    // Mouse button or key that fires the currently selected ability.
     public KeyCode abilityKey = KeyCode.Mouse0;
 
-    // Which ability is active when you press the ability key
+    // Which ability is active when you press abilityKey (change with Z/X/C/V).
     public enum AbilityState
     {
-        None,         // Ability button does nothing special
-        Dash,         // Handled by DashAbility
-        HighJump,     // Placeholder for a future script
-        GravityShift  // Calls PlayerGravityShift.TryExecuteShift()
+        None,
+        Dash,
+        HighJump,
+        GravityShift
     }
 
-    // Current ability (change with Z/X/C/V in ChangeAbility)
     public AbilityState ability;
 
-    // Unity's built-in character controlelr 
-    CharacterController _cc;
+    // Cached Rigidbody on this player.
+    Rigidbody _rb;
 
-    // Fall speed when we are not using PlayerGravityMotor
-    Vector3 _standaloneVelocity;
-
-    // Vertical look angle in degrees
+    // Current up/down look angle in degrees.
     float _pitch;
 
-    // So we only print the "missing orientation" error once
+    // Only log missing orientation script once so the Console is not spammed.
     bool _loggedMissingOrient;
+    bool _loggedMissingMotor;
 
-    // Cached ability components 
     PlayerGravityMotor _motor;
     PlayerGravityOrientation _orient;
     PlayerGravityShift _gravityShift;
     DashAbility _dash;
 
-    // Runs once when the object loads. grabs references to other components
+    // Grab references to other components on this GameObject.
     void Awake()
     {
-        _cc = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
         _motor = GetComponent<PlayerGravityMotor>();
         _orient = GetComponent<PlayerGravityOrientation>();
         _gravityShift = GetComponent<PlayerGravityShift>();
         _dash = GetComponent<DashAbility>();
     }
 
-    // First frame hide and lock the mouse
+    // Lock the cursor for mouse-look when the scene starts.
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // Every frame movement, then abilities
+    // Every frame: movement and camera, then abilities, then hotkeys to change ability.
     void Update()
     {
         Move();
@@ -103,10 +102,10 @@ public class BasicPlayerController : MonoBehaviour
         ChangeAbility();
     }
 
-    // Handles escape key, mouse look, WASD, camera orbit
+    // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
     void Move()
     {
-        // Escape toggles cursor lock so you can click UI or leave the game window.
+        // Escape toggles whether the cursor is locked.
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             bool locked = Cursor.lockState == CursorLockMode.Locked;
@@ -114,7 +113,7 @@ public class BasicPlayerController : MonoBehaviour
             Cursor.visible = locked;
         }
 
-        // Wall-walk mode: BasicPlayerController does not move or aim here. another script handles it
+        // In gravity-shift mode we do not move here; PlayerGravityOrientation handles aim and the motor.
         if (enableGravityShift)
         {
             if (_orient == null && !_loggedMissingOrient)
@@ -125,48 +124,53 @@ public class BasicPlayerController : MonoBehaviour
             return;
         }
 
-        if (playerCamera == null || _cc == null)
+        if (playerCamera == null || _rb == null)
             return;
 
-        // Normal levels use world Y as up
+        if (_motor == null && !_loggedMissingMotor)
+        {
+            _loggedMissingMotor = true;
+            Debug.LogError("Add PlayerGravityMotor (and CapsuleCollider) for movement, or this player will not move.", this);
+        }
+
+        // Normal levels use world +Y as up.
         Vector3 up = Vector3.up;
 
-        // Only rotate the camera when the cursor is locked
+        // Only rotate the camera when the cursor is locked.
         bool lookEnabled = Cursor.lockState == CursorLockMode.Locked;
 
         if (lookEnabled)
         {
-            // Mouse X spins around the world's up axis
+            // Mouse X spins the body around world up.
             transform.Rotate(up, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
-
-            // Mouse Y changes pitch (up/down look), clamped so you cannot flip upside down
             float mouseY = Input.GetAxis("Mouse Y") * lookSensitivity;
             _pitch += invertVerticalLook ? -mouseY : mouseY;
             _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
         }
 
-        // Forward on the ground plane (ignore tilt so WASD stays on the floor)
+        // Forward on the horizontal plane (ignore tilt so WASD stays on the floor).
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, up);
         if (forward.sqrMagnitude < 1e-8f)
             forward = Vector3.ProjectOnPlane(Vector3.forward, up);
         forward.Normalize();
 
-        // Right is perpendicular to up and forward
+        // Right vector for strafe.
         Vector3 right = Vector3.Cross(up, forward).normalized;
 
-        // Apply pitch around the right axis to get the direction from camera toward the focus
+        // Apply pitch around the right axis to get the direction the camera should look along.
         Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
         Vector3 cameraLook = (pitchRot * forward).normalized;
 
-        // WASD from Input Manager
+        // Raw axes are -1, 0, or 1 with no smoothing (good for snappy keyboard input).
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
-        Vector3 planar = (right * h + forward * v).normalized * (moveSpeed * Time.deltaTime);
+        Vector3 wishVel = (right * h + forward * v).normalized * moveSpeed;
 
-        // Actually move the CharacterController
-        TickMovement(planar);
+        // Tell the motor the desired horizontal speed; the motor runs in FixedUpdate and applies the Rigidbody.
+        if (_motor != null)
+            _motor.SetMoveVelocity(wishVel);
 
-        // Third-person with collision pull-in (first-person when space is tight)
+        // Place the orbit camera behind the player, pulling in if a wall is in the way.
         Vector3 focus = transform.position + up * focusHeight;
         PlayerOrbitCamera.Place(
             playerCamera,
@@ -182,52 +186,13 @@ public class BasicPlayerController : MonoBehaviour
             cameraObstacleMask);
     }
 
-    // Applies horizontal motion plus jump/gravity for this frame
-    void TickMovement(Vector3 planarDelta)
-    {
-        // If PlayerGravityMotor exists, it owns velocity, jump, and gravity along GravityWorld.Up
-        if (_motor != null)
-        {
-            _motor.Tick(planarDelta);
-            return;
-        }
-
-        if (_cc == null)
-            return;
-
-        Vector3 up = Vector3.up;
-        bool grounded = _cc.isGrounded;
-
-        // Jump only when touching the ground
-        if (grounded && Input.GetButtonDown("Jump"))
-            _standaloneVelocity += up * jumpForce;
-
-        // Accelerate downward using the global gravity
-        _standaloneVelocity += Physics.gravity * Time.deltaTime;
-
-        // When grounded cancel downward velocity so we do not sink into the floor
-        if (grounded)
-        {
-            float vg = Vector3.Dot(_standaloneVelocity, up);
-            if (vg < 0f)
-                _standaloneVelocity -= up * vg;
-        }
-
-        // One Move call: sideways from input, vertical from _standaloneVelocity
-        _cc.Move(planarDelta + _standaloneVelocity * Time.deltaTime);
-
-        // After landing remove any leftover downward speed along up
-        if (_cc.isGrounded && Vector3.Dot(_standaloneVelocity, up) < 0f)
-            _standaloneVelocity = Vector3.ProjectOnPlane(_standaloneVelocity, up);
-    }
-
-    // True on the frame the player presses the ability key or gamepad
+    // True on the frame the player presses the ability key.
     bool AbilityTriggerDown()
     {
         return Input.GetKeyDown(abilityKey) || Input.GetKeyDown(KeyCode.JoystickButton0);
     }
 
-    // Routes the ability key to the correct script based on the current AbilityState
+    // Calls the script that matches the current ability slot.
     void UseAbility()
     {
         if (!AbilityTriggerDown())
@@ -239,7 +204,7 @@ public class BasicPlayerController : MonoBehaviour
                 _dash?.UseAbility();
                 break;
             case AbilityState.HighJump:
-                // Hook up a high-jump script here later.
+                // Hook up a high-jump script here.
                 break;
             case AbilityState.GravityShift:
                 _gravityShift?.TryExecuteShift();
@@ -249,7 +214,7 @@ public class BasicPlayerController : MonoBehaviour
         }
     }
 
-    // keyboard hotkeys to swap abilities
+    // Simple keyboard hotkeys to change which ability is selected.
     void ChangeAbility()
     {
         if (Input.GetKeyDown(KeyCode.Z))
