@@ -13,7 +13,7 @@ public class DashAbility : MonoBehaviour
     float _successCooldownEndTime;
 
     // How many times stronger than normal speed the dash is.
-    float dashBoost = 5f;
+    public float dashBoost = 5f;
 
     float dashTime;
 
@@ -21,8 +21,6 @@ public class DashAbility : MonoBehaviour
 
     // Unit direction on the walk plane, captured when the dash starts (world space).
     Vector3 _lockedPlanarDirection;
-
-    bool canBreakObstacles;
 
     void Awake()
     {
@@ -32,11 +30,7 @@ public class DashAbility : MonoBehaviour
 
     void Update()
     {
-        bool grounded = _motor != null && _motor.IsGroundedForLogic();
-        if (isDashing && grounded)
-            canBreakObstacles = true;
-        else
-            canBreakObstacles = false;
+        
     }
 
     // Returns true while dashing; outputs planar velocity = locked direction * current moveSpeed (already boosted).
@@ -121,7 +115,7 @@ public class DashAbility : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Breakable" && canBreakObstacles)
+        if (other.tag == "Breakable" && isDashing)
             Destroy(other.gameObject);
     }
 }
