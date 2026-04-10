@@ -12,7 +12,7 @@ public class DashAbility : MonoBehaviour
     PlayerGravityMotor _motor;
 
     // How many times stronger than normal speed the dash is.
-    float dashBoost = 5f;
+    public float dashBoost = 5f;
 
     // How long one dash lasts in seconds.
     float dashTime;
@@ -23,8 +23,11 @@ public class DashAbility : MonoBehaviour
     // True when the cooldown is ended
     bool canDash = true;
 
+<<<<<<< Updated upstream
     // Time before the ability can be triggered again
     float coolDown = 2f;
+=======
+>>>>>>> Stashed changes
 
     void Awake()
     {
@@ -34,10 +37,27 @@ public class DashAbility : MonoBehaviour
 
     void Update()
     {
+<<<<<<< Updated upstream
         // Ground check: same helper the motor uses for jump / gravity.
         bool grounded = _motor != null && _motor.IsGroundedForLogic();
         if (!canDash && grounded)
             StartCoroutine(DashCooldown());
+=======
+
+    }
+
+    // Returns true while dashing; outputs planar velocity = locked direction * current moveSpeed (already boosted).
+    public bool TryGetLockedPlanarVelocity(out Vector3 planarVelocity)
+    {
+        if (!isDashing || playerController == null)
+        {
+            planarVelocity = default;
+            return false;
+        }
+
+        planarVelocity = _lockedPlanarDirection * playerController.moveSpeed;
+        return true;
+>>>>>>> Stashed changes
     }
 
     // Called from BasicPlayerController when Dash is the selected ability and the ability key is pressed.
@@ -90,7 +110,10 @@ public class DashAbility : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Breakable" && isDashing)
+<<<<<<< Updated upstream
         {
+=======
+>>>>>>> Stashed changes
             Destroy(other.gameObject);
         }
     }
