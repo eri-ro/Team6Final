@@ -17,6 +17,8 @@ public class PlayerGravityShift : MonoBehaviour
     PlayerGravityMotor _motor;
     readonly RaycastHit[] _rayHits = new RaycastHit[RaycastBufferSize];
 
+    float _successCooldownEndTime;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -28,6 +30,9 @@ public class PlayerGravityShift : MonoBehaviour
     public void TryExecuteShift()
     {
         if (_player != null && !_player.enableGravityShift)
+            return;
+
+        if (Time.time < _successCooldownEndTime)
             return;
 
         Vector3 up = GravityWorld.Up;
@@ -71,6 +76,9 @@ public class PlayerGravityShift : MonoBehaviour
 
         _motor?.ClearVelocity();
         Physics.SyncTransforms();
+
+        float cd = _player != null ? _player.abilitySuccessCooldownSeconds : 1f;
+        _successCooldownEndTime = Time.time + cd;
     }
 
     static Vector3 ResampleWalkableNormal(Collider col, Vector3 hitPoint, Vector3 preliminaryOutward)
@@ -201,7 +209,7 @@ public class PlayerGravityShift : MonoBehaviour
     }
 
     // Places feet on the collider face toward the player. Uses a short ray from inside the walkable volume
-    // so thin meshes are not tunnelled through (plane-only math could land on the far side).
+    // so thin meshes are not tunnelled through.
     void SnapCapsuleToSurface(RaycastHit hit, Vector3 nu)
     {
         if (_cap == null)

@@ -7,6 +7,7 @@ public class PlayerGravityOrientation : MonoBehaviour
 {
     BasicPlayerController _player;
     PlayerGravityMotor _motor;
+    DashAbility _dash;
 
     // Up/down look angle in degrees, stored between frames.
     float _pitch;
@@ -15,6 +16,7 @@ public class PlayerGravityOrientation : MonoBehaviour
     {
         _player = GetComponent<BasicPlayerController>();
         _motor = GetComponent<PlayerGravityMotor>();
+        _dash = GetComponent<DashAbility>();
     }
 
     void Update()
@@ -53,8 +55,13 @@ public class PlayerGravityOrientation : MonoBehaviour
         Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
         Vector3 cameraLook = (pitchRot * forward).normalized;
 
-        // Same WASD as flat mode, but axes follow the wall or floor.
-        Vector3 wishVel = (right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical")).normalized * _player.moveSpeed;
+        Vector3 wishVel;
+        // During dash, movement direction is locked — same as BasicPlayerController flat mode.
+        if (_dash != null && _dash.TryGetLockedPlanarVelocity(out Vector3 lockedDashVel))
+            wishVel = lockedDashVel;
+        else
+            wishVel = (right * Input.GetAxisRaw("Horizontal") + forward * Input.GetAxisRaw("Vertical")).normalized * _player.moveSpeed;
+
         _motor?.SetMoveVelocity(wishVel);
 
         // Third-person camera with wall collision.

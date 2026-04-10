@@ -51,6 +51,9 @@ public class BasicPlayerController : MonoBehaviour
     // Mouse button or key that fires the currently selected ability.
     public KeyCode abilityKey = KeyCode.Mouse0;
 
+    [Tooltip("Seconds after a successful Dash, High Jump, or Gravity Shift before that same ability can be used again.")]
+    public float abilitySuccessCooldownSeconds = 1f;
+
     // Which ability is active when you press abilityKey (change with Z/X/C/V).
     public enum AbilityState
     {
@@ -76,6 +79,7 @@ public class BasicPlayerController : MonoBehaviour
     PlayerGravityOrientation _orient;
     PlayerGravityShift _gravityShift;
     DashAbility _dash;
+    HighJumpAbility _highJump;
 
     // Grab references to other components on this GameObject.
     void Awake()
@@ -85,6 +89,7 @@ public class BasicPlayerController : MonoBehaviour
         _orient = GetComponent<PlayerGravityOrientation>();
         _gravityShift = GetComponent<PlayerGravityShift>();
         _dash = GetComponent<DashAbility>();
+        _highJump = GetComponent<HighJumpAbility>();
     }
 
     // Lock the cursor for mouse-look when the scene starts.
@@ -94,11 +99,11 @@ public class BasicPlayerController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Every frame: movement and camera, then abilities, then hotkeys to change ability.
+    // Every frame: abilities first so dash direction locks before Move() on the same frame, then movement and camera, then hotkeys.
     void Update()
     {
-        Move();
         UseAbility();
+        Move();
         ChangeAbility();
     }
 
@@ -161,10 +166,17 @@ public class BasicPlayerController : MonoBehaviour
         Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
         Vector3 cameraLook = (pitchRot * forward).normalized;
 
-        // Raw axes are -1, 0, or 1 with no smoothing (good for snappy keyboard input).
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-        Vector3 wishVel = (right * h + forward * v).normalized * moveSpeed;
+        Vector3 wishVel;
+        // During dash, direction is fixed at dash start — WASD does not steer until the dash ends.
+        if (_dash != null && _dash.TryGetLockedPlanarVelocity(out Vector3 lockedDashVel))
+            wishVel = lockedDashVel;
+        else
+        {
+            // Raw axes are -1, 0, or 1 with no smoothing (good for snappy keyboard input).
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
+            wishVel = (right * h + forward * v).normalized * moveSpeed;
+        }
 
         // Tell the motor the desired horizontal speed; the motor runs in FixedUpdate and applies the Rigidbody.
         if (_motor != null)
@@ -204,7 +216,7 @@ public class BasicPlayerController : MonoBehaviour
                 _dash?.UseAbility();
                 break;
             case AbilityState.HighJump:
-                // Hook up a high-jump script here.
+                _highJump?.UseAbility();
                 break;
             case AbilityState.GravityShift:
                 _gravityShift?.TryExecuteShift();
@@ -218,12 +230,24 @@ public class BasicPlayerController : MonoBehaviour
     void ChangeAbility()
     {
         if (Input.GetKeyDown(KeyCode.Z))
+        {
             ability = AbilityState.Dash;
+            Debug.Log("Dash Selected");
+        }
         if (Input.GetKeyDown(KeyCode.X))
+        {
             ability = AbilityState.HighJump;
+            Debug.Log("High Jump Selected");
+        }
         if (Input.GetKeyDown(KeyCode.C))
+        {
             ability = AbilityState.GravityShift;
+            Debug.Log("Gravity Shift Selected");
+        }
         if (Input.GetKeyDown(KeyCode.V))
+        {
             ability = AbilityState.None;
+            Debug.Log("None Selected");
+        }
     }
 }

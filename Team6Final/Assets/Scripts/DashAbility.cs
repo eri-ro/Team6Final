@@ -2,25 +2,26 @@ using System.Collections;
 using UnityEngine;
 
 // Temporary speed boost while dashing. Multiplies BasicPlayerController.moveSpeed for a short time.
+// While dashing, planar direction is fixed at dash start — WASD does not steer until the dash ends.
 // Put a trigger collider on the player if you want to break objects tagged Breakable while dashing on the ground.
 public class DashAbility : MonoBehaviour
 {
-    // Used to read and change move speed during the dash.
     BasicPlayerController playerController;
 
-    // Used to know if the player is on the ground.
     PlayerGravityMotor _motor;
+
+    float _successCooldownEndTime;
 
     // How many times stronger than normal speed the dash is.
     float dashBoost = 5f;
 
-    // How long one dash lasts in seconds.
     float dashTime;
 
-    // True while the coroutine is running so we know we are in the dash window.
     bool isDashing;
 
-    // True only when dashing and grounded so breakable objects can be destroyed on trigger.
+    // Unit direction on the walk plane, captured when the dash starts (world space).
+    Vector3 _lockedPlanarDirection;
+
     bool canBreakObstacles;
 
     void Awake()
@@ -31,7 +32,6 @@ public class DashAbility : MonoBehaviour
 
     void Update()
     {
-        // Ground check: same helper the motor uses for jump / gravity.
         bool grounded = _motor != null && _motor.IsGroundedForLogic();
         if (isDashing && grounded)
             canBreakObstacles = true;
@@ -39,53 +39,104 @@ public class DashAbility : MonoBehaviour
             canBreakObstacles = false;
     }
 
-    // Called from BasicPlayerController when Dash is the selected ability and the ability key is pressed.
+    // Returns true while dashing; outputs planar velocity = locked direction * current moveSpeed (already boosted).
+    public bool TryGetLockedPlanarVelocity(out Vector3 planarVelocity)
+    {
+        if (!isDashing || playerController == null)
+        {
+            planarVelocity = default;
+            return false;
+        }
+
+        planarVelocity = _lockedPlanarDirection * playerController.moveSpeed;
+        return true;
+    }
+
     public void UseAbility()
     {
         if (playerController == null)
             return;
 
+        if (Time.time < _successCooldownEndTime)
+            return;
+
+        if (isDashing)
+            return;
+
+        dashTime = 0.5f;
+
         if (_motor != null && _motor.IsGroundedForLogic())
         {
-            dashTime = 0.5f;
-            Debug.Log("Ground Dash!");
+            Debug.Log("Ground dash");
+            BeginDash(dashTime);
         }
         else if (_motor != null && !_motor.IsGroundedForLogic())
         {
-            dashTime = 0.5f;
-            Debug.Log("Air Dash!");
+            Debug.Log("Air dash");
+            BeginDash(dashTime);
         }
         else
         {
-            dashTime = 0.5f;
             Debug.Log("Dash!");
+            BeginDash(dashTime);
+        }
+    }
+
+    void BeginDash(float duration)
+    {
+        CaptureDashPlanarDirection();
+        isDashing = true;
+        _successCooldownEndTime = Time.time + playerController.abilitySuccessCooldownSeconds;
+        playerController.moveSpeed *= dashBoost;
+        StartCoroutine(EndDashAfterDelay(duration));
+    }
+
+    // Matches BasicPlayerController / PlayerGravityOrientation: forward/right on the walk plane from current aim + WASD.
+    void CaptureDashPlanarDirection()
+    {
+        bool wallWalk = playerController != null && playerController.enableGravityShift;
+        Vector3 up = wallWalk ? GravityWorld.Up.normalized : Vector3.up;
+
+        Vector3 forward;
+        Vector3 right;
+
+        if (wallWalk)
+        {
+            Vector3 flatForward = GravityAlignment.FlattenOnSurface(transform.forward, up);
+            forward = flatForward.sqrMagnitude > 1e-8f ? flatForward.normalized : Vector3.ProjectOnPlane(Vector3.forward, up).normalized;
+            right = Vector3.Cross(up, forward);
+            if (right.sqrMagnitude < 1e-8f)
+                right = GravityAlignment.FlattenOnSurface(transform.right, up);
+            right.Normalize();
+        }
+        else
+        {
+            forward = Vector3.ProjectOnPlane(transform.forward, up);
+            if (forward.sqrMagnitude < 1e-8f)
+                forward = Vector3.ProjectOnPlane(Vector3.forward, up);
+            forward.Normalize();
+            right = Vector3.Cross(up, forward).normalized;
         }
 
-        StartDash(dashTime);
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+        Vector3 dir = right * h + forward * v;
+        if (dir.sqrMagnitude < 1e-6f)
+            _lockedPlanarDirection = forward;
+        else
+            _lockedPlanarDirection = dir.normalized;
     }
 
-    // Starts the timed speed boost coroutine.
-    void StartDash(float duration)
+    IEnumerator EndDashAfterDelay(float duration)
     {
-        StartCoroutine(DashBoost(duration));
-    }
-
-    // Waits for duration seconds, then restores move speed. While running, isDashing is true.
-    IEnumerator DashBoost(float duration)
-    {
-        isDashing = true;
-        playerController.moveSpeed *= dashBoost;
         yield return new WaitForSeconds(duration);
         playerController.moveSpeed /= dashBoost;
         isDashing = false;
     }
 
-    // If another object has a trigger collider and the Breakable tag, destroy it when we dash into it on the ground.
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Breakable" && canBreakObstacles)
-        {
             Destroy(other.gameObject);
-        }
     }
 }
