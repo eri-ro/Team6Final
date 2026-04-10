@@ -1,8 +1,8 @@
 using UnityEngine;
 
-// Moves the player using a Rigidbody: applies walk velocity, jump, and gravity along GravityWorld.Up.
-// Other scripts call SetMoveVelocity in Update with the desired horizontal speed (e.g. direction * moveSpeed).
-public class PlayerGravityMotor : MonoBehaviour
+// Moves the player using a Rigidbody: walk velocity from PlayerController, jump, gravity along GravityWorld.Up.
+// Used on every level; gravity direction comes from GravityWorld (default world up until a shift changes it).
+public class PlayerMotor : MonoBehaviour
 {
     // Upward impulse when jumping.
     public float jumpForce = 6f;
@@ -42,12 +42,12 @@ public class PlayerGravityMotor : MonoBehaviour
         _cap = GetComponent<CapsuleCollider>();
         if (_rb == null)
         {
-            Debug.LogError("PlayerGravityMotor needs a Rigidbody.", this);
+            Debug.LogError("PlayerMotor needs a Rigidbody.", this);
             enabled = false;
             return;
         }
 
-        // We apply gravity manually along GravityWorld.Up so Unity's default gravity does not fight wall walking.
+        // We apply gravity manually along GravityWorld.Up so Unity's default gravity does not fight custom up.
         _rb.useGravity = false;
         // Mouse look rotates the transform; we do not want the Rigidbody to spin from collisions.
         _rb.constraints = RigidbodyConstraints.FreezeRotation;

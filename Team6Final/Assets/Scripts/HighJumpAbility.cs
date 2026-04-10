@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// High jump: one big upward boost (about 2x the height of a normal jump), usable in mid-air after a regular jump.
+// High jump: one big upward boost, usable in mid-air after a regular jump.
 // After you use it, you cannot use it again until you land. While falling from that jump, gravity is reduced for a short glide.
 public class HighJumpAbility : MonoBehaviour
 {
-    BasicPlayerController _player;
-    PlayerGravityMotor _motor;
+    PlayerController _player;
+    PlayerMotor _motor;
 
     float _successCooldownEndTime;
 
@@ -17,8 +17,8 @@ public class HighJumpAbility : MonoBehaviour
 
     void Awake()
     {
-        _player = GetComponent<BasicPlayerController>();
-        _motor = GetComponent<PlayerGravityMotor>();
+        _player = GetComponent<PlayerController>();
+        _motor = GetComponent<PlayerMotor>();
     }
 
     void Update()
@@ -35,7 +35,7 @@ public class HighJumpAbility : MonoBehaviour
         _wasAirborneLastFrame = !grounded;
     }
 
-    // Called from BasicPlayerController when HighJump is selected and the ability key is pressed.
+    // Called from PlayerController when HighJump is selected and the ability key is pressed.
     public void UseAbility()
     {
         if (_motor == null)

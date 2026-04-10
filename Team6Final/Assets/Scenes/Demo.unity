@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 83668238}
   - component: {fileID: 83668237}
   - component: {fileID: 83668236}
-  - component: {fileID: 83668235}
   m_Layer: 0
   m_Name: Cube (12)
   m_TagString: GravitySurface
@@ -142,18 +141,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &83668235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 83668234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &83668236
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -252,7 +239,6 @@ GameObject:
   - component: {fileID: 230331717}
   - component: {fileID: 230331716}
   - component: {fileID: 230331715}
-  - component: {fileID: 230331714}
   m_Layer: 0
   m_Name: Cube (5)
   m_TagString: GravitySurface
@@ -260,18 +246,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &230331714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230331713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &230331715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -462,7 +436,6 @@ GameObject:
   - component: {fileID: 484200487}
   - component: {fileID: 484200486}
   - component: {fileID: 484200485}
-  - component: {fileID: 484200484}
   m_Layer: 0
   m_Name: Cube (4)
   m_TagString: GravitySurface
@@ -470,18 +443,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &484200484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 484200483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &484200485
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -580,7 +541,6 @@ GameObject:
   - component: {fileID: 485517264}
   - component: {fileID: 485517263}
   - component: {fileID: 485517262}
-  - component: {fileID: 485517261}
   m_Layer: 0
   m_Name: Cube (18)
   m_TagString: GravitySurface
@@ -588,18 +548,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &485517261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485517260}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &485517262
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -698,7 +646,6 @@ GameObject:
   - component: {fileID: 504209443}
   - component: {fileID: 504209442}
   - component: {fileID: 504209441}
-  - component: {fileID: 504209440}
   m_Layer: 0
   m_Name: Cube (20)
   m_TagString: GravitySurface
@@ -706,18 +653,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &504209440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504209439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &504209441
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -816,7 +751,6 @@ GameObject:
   - component: {fileID: 633189242}
   - component: {fileID: 633189241}
   - component: {fileID: 633189240}
-  - component: {fileID: 633189239}
   m_Layer: 0
   m_Name: Cube (11)
   m_TagString: GravitySurface
@@ -824,18 +758,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &633189239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633189238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &633189240
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -934,7 +856,6 @@ GameObject:
   - component: {fileID: 653326934}
   - component: {fileID: 653326933}
   - component: {fileID: 653326932}
-  - component: {fileID: 653326931}
   m_Layer: 0
   m_Name: Cube (16)
   m_TagString: GravitySurface
@@ -942,18 +863,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &653326931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653326930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &653326932
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1052,7 +961,6 @@ GameObject:
   - component: {fileID: 723976990}
   - component: {fileID: 723976989}
   - component: {fileID: 723976988}
-  - component: {fileID: 723976987}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: GravitySurface
@@ -1060,18 +968,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &723976987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723976986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &723976988
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1170,7 +1066,6 @@ GameObject:
   - component: {fileID: 795239019}
   - component: {fileID: 795239018}
   - component: {fileID: 795239017}
-  - component: {fileID: 795239016}
   m_Layer: 0
   m_Name: Cube (10)
   m_TagString: GravitySurface
@@ -1178,18 +1073,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &795239016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795239015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &795239017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1288,7 +1171,6 @@ GameObject:
   - component: {fileID: 865792323}
   - component: {fileID: 865792322}
   - component: {fileID: 865792321}
-  - component: {fileID: 865792320}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: GravitySurface
@@ -1296,18 +1178,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &865792320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865792319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &865792321
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1406,7 +1276,6 @@ GameObject:
   - component: {fileID: 1019033839}
   - component: {fileID: 1019033838}
   - component: {fileID: 1019033837}
-  - component: {fileID: 1019033836}
   m_Layer: 0
   m_Name: Cube (15)
   m_TagString: GravitySurface
@@ -1414,18 +1283,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1019033836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1019033835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1019033837
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1524,7 +1381,6 @@ GameObject:
   - component: {fileID: 1103684239}
   - component: {fileID: 1103684238}
   - component: {fileID: 1103684237}
-  - component: {fileID: 1103684236}
   m_Layer: 0
   m_Name: Cube (9)
   m_TagString: GravitySurface
@@ -1532,18 +1388,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1103684236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1103684235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1103684237
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1642,7 +1486,6 @@ GameObject:
   - component: {fileID: 1232825065}
   - component: {fileID: 1232825064}
   - component: {fileID: 1232825063}
-  - component: {fileID: 1232825062}
   m_Layer: 0
   m_Name: Cube (7)
   m_TagString: GravitySurface
@@ -1650,18 +1493,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1232825062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1232825061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1232825063
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1760,7 +1591,6 @@ GameObject:
   - component: {fileID: 1271177377}
   - component: {fileID: 1271177376}
   - component: {fileID: 1271177375}
-  - component: {fileID: 1271177374}
   m_Layer: 0
   m_Name: Cube (13)
   m_TagString: GravitySurface
@@ -1768,18 +1598,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1271177374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1271177373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1271177375
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1983,7 +1801,6 @@ GameObject:
   - component: {fileID: 1318260352}
   - component: {fileID: 1318260351}
   - component: {fileID: 1318260350}
-  - component: {fileID: 1318260349}
   m_Layer: 0
   m_Name: Cube (8)
   m_TagString: GravitySurface
@@ -1991,18 +1808,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1318260349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1318260348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1318260350
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2101,7 +1906,6 @@ GameObject:
   - component: {fileID: 1435411880}
   - component: {fileID: 1435411879}
   - component: {fileID: 1435411878}
-  - component: {fileID: 1435411877}
   m_Layer: 0
   m_Name: Cube (17)
   m_TagString: GravitySurface
@@ -2109,18 +1913,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1435411877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1435411876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1435411878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2219,7 +2011,6 @@ GameObject:
   - component: {fileID: 1490921223}
   - component: {fileID: 1490921222}
   - component: {fileID: 1490921221}
-  - component: {fileID: 1490921224}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: GravitySurface
@@ -2313,18 +2104,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490921219}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1490921224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1490921219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1532502518
 GameObject:
   m_ObjectHideFlags: 0
@@ -2337,7 +2116,6 @@ GameObject:
   - component: {fileID: 1532502522}
   - component: {fileID: 1532502521}
   - component: {fileID: 1532502520}
-  - component: {fileID: 1532502519}
   m_Layer: 0
   m_Name: Cube (19)
   m_TagString: GravitySurface
@@ -2345,18 +2123,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1532502519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1532502518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1532502520
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2455,7 +2221,6 @@ GameObject:
   - component: {fileID: 1632799976}
   - component: {fileID: 1632799975}
   - component: {fileID: 1632799974}
-  - component: {fileID: 1632799973}
   m_Layer: 0
   m_Name: Cube (6)
   m_TagString: GravitySurface
@@ -2463,18 +2228,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1632799973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1632799972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1632799974
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2671,7 +2424,6 @@ GameObject:
   - component: {fileID: 1761165517}
   - component: {fileID: 1761165516}
   - component: {fileID: 1761165515}
-  - component: {fileID: 1761165514}
   - component: {fileID: 1761165513}
   - component: {fileID: 1761165520}
   m_Layer: 0
@@ -2762,18 +2514,6 @@ MonoBehaviour:
   wallInteractDistance: 4
   interactRayHeight: 1
   gravityShiftSurfaceTag: GravitySurface
---- !u!114 &1761165514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761165507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce2f89aa1b2c4d5e9f0a1b2c3d4e5f60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1761165515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2830,8 +2570,9 @@ MonoBehaviour:
   minPitch: -75
   maxPitch: 75
   invertVerticalLook: 1
-  enableGravityShift: 1
   abilityKey: 323
+  abilitySuccessCooldownSeconds: 1
+  gravityControlUpAlignSpeed: 12
   ability: 3
 --- !u!54 &1761165518
 Rigidbody:
@@ -2907,7 +2648,6 @@ GameObject:
   - component: {fileID: 1840329746}
   - component: {fileID: 1840329745}
   - component: {fileID: 1840329744}
-  - component: {fileID: 1840329743}
   m_Layer: 0
   m_Name: Cube (14)
   m_TagString: GravitySurface
@@ -2915,18 +2655,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1840329743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1840329742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6c26815cbe8634297aafc6cd70b002, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1840329744
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1153,7 +1153,6 @@ MonoBehaviour:
   minPitch: -75
   maxPitch: 75
   invertVerticalLook: 1
-  enableGravityShift: 1
   abilityKey: 323
   ability: 3
 --- !u!1660057539 &9223372036854775807

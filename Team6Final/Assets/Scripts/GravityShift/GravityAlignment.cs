@@ -32,4 +32,16 @@ public static class GravityAlignment
 
         return f.normalized;
     }
+
+    // Forward and right on the walk plane perpendicular to up (same basis as PlayerController / dash).
+    public static void GetWalkForwardRight(Transform t, Vector3 up, out Vector3 forward, out Vector3 right)
+    {
+        up = up.normalized;
+        Vector3 flatForward = FlattenOnSurface(t.forward, up);
+        forward = flatForward.sqrMagnitude > 1e-8f ? flatForward.normalized : Vector3.ProjectOnPlane(Vector3.forward, up).normalized;
+        right = Vector3.Cross(up, forward);
+        if (right.sqrMagnitude < 1e-8f)
+            right = FlattenOnSurface(t.right, up);
+        right.Normalize();
+    }
 }

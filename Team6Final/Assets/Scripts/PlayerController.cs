@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Main player script: mouse look, third-person camera, picking abilities, and sending move speed to the motor.
-// When enableGravityShift is true, this script skips movement here and PlayerGravityOrientation does it instead.
-public class BasicPlayerController : MonoBehaviour
+// Walk input and camera use GravityWorld.ControlUp (smooth after a shift). Physics uses GravityWorld.Up immediately.
+public class PlayerController : MonoBehaviour
 {
     // The camera that follows the player.
     public Camera playerCamera;
@@ -35,7 +36,7 @@ public class BasicPlayerController : MonoBehaviour
     // Which physics layers count as solid for camera collision (default: everything).
     public LayerMask cameraObstacleMask = ~0;
 
-    // Legacy field: jump is handled inside PlayerGravityMotor; kept for designers who might script against it.
+    // Legacy field: jump is handled inside PlayerMotor; kept for designers who might script against it.
     public float jumpForce = 6f;
 
     // Limits for looking up and down in degrees so you cannot flip upside down.
@@ -45,14 +46,14 @@ public class BasicPlayerController : MonoBehaviour
     // If true, moving the mouse up makes the view look down (flight-sim style).
     public bool invertVerticalLook = true;
 
-    // When true, wall-walk mode is on and PlayerGravityOrientation must exist on the same object.
-    public bool enableGravityShift = false;
-
     // Mouse button or key that fires the currently selected ability.
     public KeyCode abilityKey = KeyCode.Mouse0;
 
     [Tooltip("Seconds after a successful Dash, High Jump, or Gravity Shift before that same ability can be used again.")]
     public float abilitySuccessCooldownSeconds = 1f;
+
+    [Tooltip("How fast ControlUp (camera / WASD framing) catches up to physics up after a gravity shift. Higher = snappier.")]
+    public float gravityControlUpAlignSpeed = 12f;
 
     // Which ability is active when you press abilityKey (change with Z/X/C/V).
     public enum AbilityState
@@ -71,12 +72,9 @@ public class BasicPlayerController : MonoBehaviour
     // Current up/down look angle in degrees.
     float _pitch;
 
-    // Only log missing orientation script once so the Console is not spammed.
-    bool _loggedMissingOrient;
     bool _loggedMissingMotor;
 
-    PlayerGravityMotor _motor;
-    PlayerGravityOrientation _orient;
+    PlayerMotor _motor;
     PlayerGravityShift _gravityShift;
     DashAbility _dash;
     HighJumpAbility _highJump;
@@ -85,8 +83,7 @@ public class BasicPlayerController : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _motor = GetComponent<PlayerGravityMotor>();
-        _orient = GetComponent<PlayerGravityOrientation>();
+        _motor = GetComponent<PlayerMotor>();
         _gravityShift = GetComponent<PlayerGravityShift>();
         _dash = GetComponent<DashAbility>();
         _highJump = GetComponent<HighJumpAbility>();
@@ -97,12 +94,18 @@ public class BasicPlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GravityWorld.SnapControlUpToPhysicsUp();
     }
 
-    // Every frame: abilities first so dash direction locks before Move() on the same frame, then movement and camera, then hotkeys.
+    // UseAbility before TickControlUpAlignment so a gravity shift updates physics Up the same frame ControlUp begins blending toward it.
     void Update()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (Input.GetKeyDown(KeyCode.Tab))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+#endif
         UseAbility();
+        GravityWorld.TickControlUpAlignment(Time.deltaTime, gravityControlUpAlignSpeed);
         Move();
         ChangeAbility();
     }
@@ -118,49 +121,30 @@ public class BasicPlayerController : MonoBehaviour
             Cursor.visible = locked;
         }
 
-        // In gravity-shift mode we do not move here; PlayerGravityOrientation handles aim and the motor.
-        if (enableGravityShift)
-        {
-            if (_orient == null && !_loggedMissingOrient)
-            {
-                _loggedMissingOrient = true;
-                Debug.LogError("enableGravityShift is true but PlayerGravityOrientation is missing.", this);
-            }
-            return;
-        }
-
         if (playerCamera == null || _rb == null)
             return;
 
         if (_motor == null && !_loggedMissingMotor)
         {
             _loggedMissingMotor = true;
-            Debug.LogError("Add PlayerGravityMotor (and CapsuleCollider) for movement, or this player will not move.", this);
+            Debug.LogError("Add PlayerMotor (and CapsuleCollider) for movement, or this player will not move.", this);
         }
 
-        // Normal levels use world +Y as up.
-        Vector3 up = Vector3.up;
+        Vector3 controlUp = GravityWorld.ControlUp.normalized;
+        Vector3 physicsUp = GravityWorld.Up.normalized;
 
         // Only rotate the camera when the cursor is locked.
         bool lookEnabled = Cursor.lockState == CursorLockMode.Locked;
 
         if (lookEnabled)
         {
-            // Mouse X spins the body around world up.
-            transform.Rotate(up, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
+            transform.Rotate(controlUp, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
             float mouseY = Input.GetAxis("Mouse Y") * lookSensitivity;
             _pitch += invertVerticalLook ? -mouseY : mouseY;
             _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
         }
 
-        // Forward on the horizontal plane (ignore tilt so WASD stays on the floor).
-        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, up);
-        if (forward.sqrMagnitude < 1e-8f)
-            forward = Vector3.ProjectOnPlane(Vector3.forward, up);
-        forward.Normalize();
-
-        // Right vector for strafe.
-        Vector3 right = Vector3.Cross(up, forward).normalized;
+        GravityAlignment.GetWalkForwardRight(transform, controlUp, out Vector3 forward, out Vector3 right);
 
         // Apply pitch around the right axis to get the direction the camera should look along.
         Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
@@ -178,18 +162,23 @@ public class BasicPlayerController : MonoBehaviour
             wishVel = (right * h + forward * v).normalized * moveSpeed;
         }
 
+        // Motor splits velocity along physics Up; keep horizontal wish on that plane while ControlUp blends.
+        wishVel = Vector3.ProjectOnPlane(wishVel, physicsUp);
+        if (wishVel.sqrMagnitude > 1e-8f)
+            wishVel = wishVel.normalized * moveSpeed;
+
         // Tell the motor the desired horizontal speed; the motor runs in FixedUpdate and applies the Rigidbody.
         if (_motor != null)
             _motor.SetMoveVelocity(wishVel);
 
         // Place the orbit camera behind the player, pulling in if a wall is in the way.
-        Vector3 focus = transform.position + up * focusHeight;
+        Vector3 focus = transform.position + controlUp * focusHeight;
         PlayerOrbitCamera.Place(
             playerCamera,
             transform,
             focus,
             cameraLook,
-            up,
+            controlUp,
             cameraDistance,
             cameraHeightBias,
             cameraCollisionMinDistance,

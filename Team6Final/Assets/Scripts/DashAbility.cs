@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-// Temporary speed boost while dashing. Multiplies BasicPlayerController.moveSpeed for a short time.
+// Temporary speed boost while dashing. Multiplies PlayerController.moveSpeed for a short time.
 // While dashing, planar direction is fixed at dash start — WASD does not steer until the dash ends.
 // Put a trigger collider on the player if you want to break objects tagged Breakable while dashing on the ground.
 public class DashAbility : MonoBehaviour
 {
-    BasicPlayerController playerController;
+    PlayerController playerController;
 
-    PlayerGravityMotor _motor;
+    PlayerMotor _motor;
 
     float _successCooldownEndTime;
 
@@ -26,8 +26,8 @@ public class DashAbility : MonoBehaviour
 
     void Awake()
     {
-        playerController = GetComponent<BasicPlayerController>();
-        _motor = GetComponent<PlayerGravityMotor>();
+        playerController = GetComponent<PlayerController>();
+        _motor = GetComponent<PlayerMotor>();
     }
 
     void Update()
@@ -67,12 +67,12 @@ public class DashAbility : MonoBehaviour
 
         if (_motor != null && _motor.IsGroundedForLogic())
         {
-            Debug.Log("Ground dash");
+            Debug.Log("Ground Dash!");
             BeginDash(dashTime);
         }
         else if (_motor != null && !_motor.IsGroundedForLogic())
         {
-            Debug.Log("Air dash");
+            Debug.Log("Air Dash!");
             BeginDash(dashTime);
         }
         else
@@ -91,40 +91,25 @@ public class DashAbility : MonoBehaviour
         StartCoroutine(EndDashAfterDelay(duration));
     }
 
-    // Matches BasicPlayerController / PlayerGravityOrientation: forward/right on the walk plane from current aim + WASD.
+    // Same framing as PlayerController (ControlUp), locked direction on the physics Up plane for the motor.
     void CaptureDashPlanarDirection()
     {
-        bool wallWalk = playerController != null && playerController.enableGravityShift;
-        Vector3 up = wallWalk ? GravityWorld.Up.normalized : Vector3.up;
-
-        Vector3 forward;
-        Vector3 right;
-
-        if (wallWalk)
-        {
-            Vector3 flatForward = GravityAlignment.FlattenOnSurface(transform.forward, up);
-            forward = flatForward.sqrMagnitude > 1e-8f ? flatForward.normalized : Vector3.ProjectOnPlane(Vector3.forward, up).normalized;
-            right = Vector3.Cross(up, forward);
-            if (right.sqrMagnitude < 1e-8f)
-                right = GravityAlignment.FlattenOnSurface(transform.right, up);
-            right.Normalize();
-        }
-        else
-        {
-            forward = Vector3.ProjectOnPlane(transform.forward, up);
-            if (forward.sqrMagnitude < 1e-8f)
-                forward = Vector3.ProjectOnPlane(Vector3.forward, up);
-            forward.Normalize();
-            right = Vector3.Cross(up, forward).normalized;
-        }
+        Vector3 physicsUp = GravityWorld.Up.normalized;
+        Vector3 controlUp = GravityWorld.ControlUp.normalized;
+        GravityAlignment.GetWalkForwardRight(transform, controlUp, out Vector3 forward, out Vector3 right);
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector3 dir = right * h + forward * v;
         if (dir.sqrMagnitude < 1e-6f)
-            _lockedPlanarDirection = forward;
+            dir = forward;
         else
-            _lockedPlanarDirection = dir.normalized;
+            dir = dir.normalized;
+
+        dir = Vector3.ProjectOnPlane(dir, physicsUp);
+        if (dir.sqrMagnitude < 1e-8f)
+            dir = Vector3.ProjectOnPlane(forward, physicsUp);
+        _lockedPlanarDirection = dir.normalized;
     }
 
     IEnumerator EndDashAfterDelay(float duration)
