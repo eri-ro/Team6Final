@@ -55,6 +55,7 @@ public class PlayerGravityMotor : MonoBehaviour
     public void SetMoveVelocity(Vector3 planarWorldVelocity)
     {
         _wishPlanarVelocity = planarWorldVelocity;
+        //Debug.Log($"wisvel out: {planarWorldVelocity.magnitude}");
     }
 
     // True if a short ray from the feet hits something below along -GravityWorld.Up.

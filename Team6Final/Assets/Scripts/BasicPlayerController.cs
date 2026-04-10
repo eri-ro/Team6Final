@@ -51,6 +51,9 @@ public class BasicPlayerController : MonoBehaviour
     // Mouse button or key that fires the currently selected ability.
     public KeyCode abilityKey = KeyCode.Mouse0;
 
+    // Lock the controlls during a dash
+    public bool controlLock = false;
+
     // Which ability is active when you press abilityKey (change with Z/X/C/V).
     public enum AbilityState
     {
@@ -105,6 +108,9 @@ public class BasicPlayerController : MonoBehaviour
     // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
     void Move()
     {
+        // Set enableGravityShift to true when the gravity shift ability is active
+        EnableGravityShift();
+
         // Escape toggles whether the cursor is locked.
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -112,7 +118,7 @@ public class BasicPlayerController : MonoBehaviour
             Cursor.lockState = locked ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = locked;
         }
-
+        
         // In gravity-shift mode we do not move here; PlayerGravityOrientation handles aim and the motor.
         if (enableGravityShift)
         {
@@ -123,16 +129,16 @@ public class BasicPlayerController : MonoBehaviour
             }
             return;
         }
-
+        
         if (playerCamera == null || _rb == null)
             return;
-
+        
         if (_motor == null && !_loggedMissingMotor)
         {
             _loggedMissingMotor = true;
             Debug.LogError("Add PlayerGravityMotor (and CapsuleCollider) for movement, or this player will not move.", this);
         }
-
+        
         // Normal levels use world +Y as up.
         Vector3 up = Vector3.up;
 
@@ -164,6 +170,13 @@ public class BasicPlayerController : MonoBehaviour
         // Raw axes are -1, 0, or 1 with no smoothing (good for snappy keyboard input).
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
+
+        // Lock the controlls while dashing
+        if (controlLock)
+        {
+            h = 0;  // Player can't move side to side
+            v = 1;  // Player moves forward automatically
+        }
         Vector3 wishVel = (right * h + forward * v).normalized * moveSpeed;
 
         // Tell the motor the desired horizontal speed; the motor runs in FixedUpdate and applies the Rigidbody.
@@ -218,12 +231,36 @@ public class BasicPlayerController : MonoBehaviour
     void ChangeAbility()
     {
         if (Input.GetKeyDown(KeyCode.Z))
+        {
             ability = AbilityState.Dash;
+            Debug.Log("Dash Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.X))
+        {
             ability = AbilityState.HighJump;
+            Debug.Log("High Jump Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.C))
+        {
             ability = AbilityState.GravityShift;
+            Debug.Log("Gravity Shift Selected");
+        }
+
         if (Input.GetKeyDown(KeyCode.V))
+        {
             ability = AbilityState.None;
+            Debug.Log("Abilities Disabled");
+        }
+    }
+
+    // Set the enableGravityShift bool to true when gravity shift is active
+    void EnableGravityShift()
+    {
+        if (ability == AbilityState.GravityShift)
+            enableGravityShift = true;
+        else
+            enableGravityShift = false;
     }
 }
