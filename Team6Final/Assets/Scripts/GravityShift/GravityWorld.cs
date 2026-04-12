@@ -1,19 +1,42 @@
 using UnityEngine;
 
-// Stores which direction is up for the whole game right now
-// Physics.gravity is set to point opposite that direction so the player falls the right way on walls
+// Global which way is up for the game. Physics.gravity is kept opposite to this so Unity physics matches the design.
 public class GravityWorld
 {
-    // Current up direction in world space starts as normal Y+
+    // Current up direction in world space. Starts as normal Unity: Y+.
     public static Vector3 Up { get; private set; } = Vector3.up;
 
-    // Call this when the player shifts to a new surface. updates Up and global gravity
+    // Smoothed toward Up for camera and input framing; physics (motor, gravity) uses Up immediately.
+    public static Vector3 ControlUp { get; private set; } = Vector3.up;
+
+    // Call when the player shifts to a new surface; updates Up and sets Physics.gravity to pull along -Up.
     public static void SetGravityUp(Vector3 worldUp)
     {
-        // Normalize so length is always 1
+        // Normalize so math and gravity strength stay consistent.
         Up = worldUp.normalized;
 
-        // sets global gravity using custom up
+        // Unity moves dynamic bodies with Physics.gravity; we match it to our custom up direction.
         Physics.gravity = -Up * 9.81f;
+    }
+
+    // Call every frame. Slowly rotates ControlUp toward the real physics Up so the camera and WASD feel smooth after a gravity shift, instead of snapping instantly.
+    public static void TickControlUpAlignment(float deltaTime, float alignSpeed)
+    {
+        Vector3 target = Up.sqrMagnitude > 1e-10f ? Up.normalized : Vector3.up;
+        if (alignSpeed <= 0f || deltaTime <= 0f)
+        {
+            ControlUp = target;
+            return;
+        }
+
+        float t = Mathf.Clamp01(alignSpeed * deltaTime);
+        ControlUp = Vector3.Slerp(ControlUp, target, t).normalized;
+    }
+
+    // Makes ControlUp match physics Up in one frame.
+    public static void SnapControlUpToPhysicsUp()
+    {
+        Vector3 target = Up.sqrMagnitude > 1e-10f ? Up.normalized : Vector3.up;
+        ControlUp = target;
     }
 }
