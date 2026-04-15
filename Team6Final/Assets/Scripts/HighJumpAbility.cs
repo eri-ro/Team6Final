@@ -15,6 +15,12 @@ public class HighJumpAbility : MonoBehaviour
     // Previous frame was not grounded — used so we only clear the lock when landing, not while still on the ground after takeoff.
     bool _wasAirborneLastFrame;
 
+    [SerializeField]
+    ParticleSystem _highJumpParticleSystem;
+
+    [SerializeField]
+    int _highJumpParticleEmission = 10;
+
     void Awake()
     {
         _player = GetComponent<PlayerController>();
@@ -55,7 +61,9 @@ public class HighJumpAbility : MonoBehaviour
 
         float cd = _player != null ? _player.abilitySuccessCooldownSeconds : 1f;
         _successCooldownEndTime = Time.time + cd;
-
+        //Emit Particles
+        _highJumpParticleSystem.Emit(_highJumpParticleEmission);
+        
         _airborneFromHighJump = true;
     }
 }
