@@ -21,6 +21,8 @@ public class PlayerMotor : MonoBehaviour
     Rigidbody _rb;
     CapsuleCollider _cap;
 
+    TrailRenderer _playerTrail;
+
     // Last requested horizontal velocity from the player controller.
     Vector3 _wishPlanarVelocity;
 
@@ -40,6 +42,7 @@ public class PlayerMotor : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _cap = GetComponent<CapsuleCollider>();
+        _playerTrail = GetComponent<TrailRenderer>();
         if (_rb == null)
         {
             Debug.LogError("PlayerMotor needs a Rigidbody.", this);
@@ -61,6 +64,7 @@ public class PlayerMotor : MonoBehaviour
         if (_rb != null)
             _rb.velocity = Vector3.zero;
         _highJumpSlowFallActive = false;
+        _playerTrail.emitting = false;
     }
 
     // Stores what the player wants for horizontal motion this frame (world space, along the walk plane).
@@ -81,6 +85,7 @@ public class PlayerMotor : MonoBehaviour
         vel += up * impulse;
         _rb.velocity = vel;
         _highJumpSlowFallActive = true;
+        _playerTrail.emitting = true;
         return true;
     }
 
@@ -122,6 +127,7 @@ public class PlayerMotor : MonoBehaviour
         if (grounded)
         {
             _highJumpSlowFallActive = false;
+            _playerTrail.emitting = false;
             // Kill downward speed into the floor so we do not sink.
             float vUp = Vector3.Dot(vel, up);
             if (vUp < 0f)
