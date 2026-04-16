@@ -23,6 +23,12 @@ public class PlayerGravityShift : MonoBehaviour
     // After a successful shift, wait this long before another (actual seconds come from PlayerController).
     float _successCooldownEndTime;
 
+    [SerializeField]
+    ParticleSystem _gravityShiftParticleSystem;
+
+    [SerializeField]
+    int _gravityShiftParticlesEmission = 10;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -90,6 +96,8 @@ public class PlayerGravityShift : MonoBehaviour
 
         float cd = _player != null ? _player.abilitySuccessCooldownSeconds : 1f;
         _successCooldownEndTime = Time.time + cd;
+        //Emit particles
+        _gravityShiftParticleSystem.Emit(_gravityShiftParticlesEmission);
     }
 
     // Cast a short ray inside the collider to read a cleaner normal at the hit point.

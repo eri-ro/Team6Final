@@ -22,10 +22,19 @@ public class DashAbility : MonoBehaviour
     // Unit direction on the walk plane, captured when the dash starts (world space).
     Vector3 _lockedPlanarDirection;
 
+    [SerializeField]
+    ParticleSystem _dashParticleSystem;
+
+    [SerializeField]
+    int _dashParticleEmissinon = 10;
+
+    TrailRenderer _playerTrail;
+
     void Awake()
     {
         playerController = GetComponent<PlayerController>();
         _motor = GetComponent<PlayerMotor>();
+        _playerTrail = GetComponent<TrailRenderer>();
     }
 
     void Update()
@@ -81,6 +90,10 @@ public class DashAbility : MonoBehaviour
         CaptureDashPlanarDirection();
         isDashing = true;
         _successCooldownEndTime = Time.time + playerController.abilitySuccessCooldownSeconds;
+        //Emit Particles
+        _dashParticleSystem.Emit(_dashParticleEmissinon);
+        //Enable Trail and change its color
+        _playerTrail.emitting = true;
         playerController.moveSpeed *= dashBoost;
         StartCoroutine(EndDashAfterDelay(duration));
     }
@@ -111,6 +124,8 @@ public class DashAbility : MonoBehaviour
         yield return new WaitForSeconds(duration);
         playerController.moveSpeed /= dashBoost;
         isDashing = false;
+        //Disable Player Trail
+        _playerTrail.emitting = false;
     }
 
     private void OnTriggerEnter(Collider other)
