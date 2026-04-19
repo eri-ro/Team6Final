@@ -164,16 +164,24 @@ public class PlayerMotor : MonoBehaviour
                 break;
             if (Mathf.Abs(Vector3.Dot(hit.normal, up)) >= wallContactNormalDotThreshold)
                 break;
-            float into = Vector3.Dot(horizontalWish, hit.normal);
+
+            // Flatten normal to the walk plane
+            Vector3 nFlat = Vector3.ProjectOnPlane(hit.normal, up);
+            if (nFlat.sqrMagnitude < 1e-8f)
+                break;
+            nFlat.Normalize();
+
+            float into = Vector3.Dot(horizontalWish, nFlat);
             if (into >= 0f)
                 break;
-            horizontalWish -= hit.normal * into;
+            horizontalWish -= nFlat * into;
+            horizontalWish = Vector3.ProjectOnPlane(horizontalWish, up);
             if (horizontalWish.sqrMagnitude < 1e-10f)
                 break;
             dir = horizontalWish.normalized;
         }
 
-        return horizontalWish;
+        return Vector3.ProjectOnPlane(horizontalWish, up);
     }
 
     // Physics step: apply gravity, horizontal wish, jump, then write velocity to the Rigidbody.
