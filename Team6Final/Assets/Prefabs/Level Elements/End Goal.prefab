@@ -517,7 +517,7 @@ GameObject:
   - component: {fileID: 6727631472556539945}
   m_Layer: 0
   m_Name: End Goal
-  m_TagString: Untagged
+  m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -587,6 +587,7 @@ MonoBehaviour:
   _endAnimation: {fileID: 6727631472556539945}
   _levelTimer: {fileID: 4525471860477550057}
   _timeTakenText: {fileID: 3922212848930751928}
+  _fallCountText: {fileID: 6999753104292425692}
 --- !u!95 &6727631472556539945
 Animator:
   serializedVersion: 5
