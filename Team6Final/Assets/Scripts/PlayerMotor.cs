@@ -4,6 +4,8 @@ using UnityEngine;
 // Used on every level; gravity direction comes from GravityWorld (default world up until a shift changes it).
 public class PlayerMotor : MonoBehaviour
 {
+    const int GroundProbeHitBufferSize = 8;
+
     // Upward impulse when jumping.
     public float jumpForce = 6f;
 
@@ -18,10 +20,20 @@ public class PlayerMotor : MonoBehaviour
     [Range(0.05f, 1f)]
     public float highJumpSlowFallGravityScale = 0.35f;
 
+    [Tooltip("Ray hits whose normal is flatter than this vs gravity up are ignored (walls read as not ground).")]
+    [Range(0.15f, 0.85f)]
+    public float minGroundNormalDotUp = 0.35f;
+
+    [Tooltip("Contacts closer to horizontal than this vs up are treated as walls — allows horizontal sliding along them.")]
+    [Range(0.1f, 0.9f)]
+    public float wallContactNormalDotThreshold = 0.55f;
+
     Rigidbody _rb;
     CapsuleCollider _cap;
 
     TrailRenderer _playerTrail;
+
+    readonly RaycastHit[] _groundHits = new RaycastHit[GroundProbeHitBufferSize];
 
     // Last requested horizontal velocity from the player controller.
     Vector3 _wishPlanarVelocity;
@@ -64,7 +76,8 @@ public class PlayerMotor : MonoBehaviour
         if (_rb != null)
             _rb.velocity = Vector3.zero;
         _highJumpSlowFallActive = false;
-        _playerTrail.emitting = false;
+        if (_playerTrail != null)
+            _playerTrail.emitting = false;
     }
 
     // Stores what the player wants for horizontal motion this frame (world space, along the walk plane).
@@ -85,14 +98,15 @@ public class PlayerMotor : MonoBehaviour
         vel += up * impulse;
         _rb.velocity = vel;
         _highJumpSlowFallActive = true;
-        _playerTrail.emitting = true;
+        if (_playerTrail != null)
+            _playerTrail.emitting = true;
         return true;
     }
 
-    // True if a short ray from the feet hits something below along -GravityWorld.Up.
+    // True if there is walkable ground under the feet.
     public bool IsGroundedForLogic()
     {
-        Vector3 up = GravityWorld.Up;
+        Vector3 up = GravityWorld.Up.normalized;
         if (_rb == null || _cap == null)
             return false;
 
@@ -104,7 +118,70 @@ public class PlayerMotor : MonoBehaviour
         Vector3 rayStart = lowestOnCapsule + up * 0.06f;
         // Ray must be long enough to reach the floor from the feet; too short = never grounded.
         float dist = groundProbeExtraDistance + Physics.defaultContactOffset * 2f + 0.12f;
-        return Physics.Raycast(rayStart, -up, dist, ~0, QueryTriggerInteraction.Ignore);
+
+        int count = Physics.RaycastNonAlloc(rayStart, -up, _groundHits, dist, ~0, QueryTriggerInteraction.Ignore);
+        if (count <= 0)
+            return false;
+
+        float bestDist = float.MaxValue;
+        bool found = false;
+        for (int i = 0; i < count; i++)
+        {
+            RaycastHit h = _groundHits[i];
+            float nDot = Vector3.Dot(h.normal.normalized, up);
+            if (nDot < minGroundNormalDotUp)
+                continue;
+            if (h.distance < bestDist)
+            {
+                bestDist = h.distance;
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    // Projects horizontal wish off wall normals using Physics.CapsuleCast.
+    Vector3 SlideHorizontalAlongWalls(Vector3 horizontalWish, Vector3 up)
+    {
+        if (_cap == null || horizontalWish.sqrMagnitude < 1e-10f)
+            return horizontalWish;
+
+        Vector3 center = transform.TransformPoint(_cap.center);
+        Vector3 axis = transform.up.normalized;
+        float halfH = Mathf.Max(0.001f, _cap.height * 0.5f - _cap.radius);
+        Vector3 p1 = center + axis * halfH;
+        Vector3 p2 = center - axis * halfH;
+        float r = _cap.radius * 0.99f;
+        float probeDist = Mathf.Max(0.1f, _cap.radius * 0.35f);
+
+        Vector3 dir = horizontalWish.normalized;
+        for (int k = 0; k < 3; k++)
+        {
+            if (!Physics.CapsuleCast(p1, p2, r, dir, out RaycastHit hit, probeDist, ~0, QueryTriggerInteraction.Ignore))
+                break;
+            if (hit.collider != null && (hit.collider == _cap || hit.collider.transform.IsChildOf(transform)))
+                break;
+            if (Mathf.Abs(Vector3.Dot(hit.normal, up)) >= wallContactNormalDotThreshold)
+                break;
+
+            // Flatten normal to the walk plane
+            Vector3 nFlat = Vector3.ProjectOnPlane(hit.normal, up);
+            if (nFlat.sqrMagnitude < 1e-8f)
+                break;
+            nFlat.Normalize();
+
+            float into = Vector3.Dot(horizontalWish, nFlat);
+            if (into >= 0f)
+                break;
+            horizontalWish -= nFlat * into;
+            horizontalWish = Vector3.ProjectOnPlane(horizontalWish, up);
+            if (horizontalWish.sqrMagnitude < 1e-10f)
+                break;
+            dir = horizontalWish.normalized;
+        }
+
+        return Vector3.ProjectOnPlane(horizontalWish, up);
     }
 
     // Physics step: apply gravity, horizontal wish, jump, then write velocity to the Rigidbody.
@@ -113,7 +190,7 @@ public class PlayerMotor : MonoBehaviour
         if (_rb == null)
             return;
 
-        Vector3 up = GravityWorld.Up;
+        Vector3 up = GravityWorld.Up.normalized;
         Vector3 vel = _rb.velocity;
 
         // Softer gravity while falling after a high jump (glide). Ascent still uses full gravity.
@@ -127,15 +204,19 @@ public class PlayerMotor : MonoBehaviour
         if (grounded)
         {
             _highJumpSlowFallActive = false;
-            _playerTrail.emitting = false;
             // Kill downward speed into the floor so we do not sink.
+            if (_playerTrail != null)
+                _playerTrail.emitting = false;
             float vUp = Vector3.Dot(vel, up);
             if (vUp < 0f)
                 vel -= up * vUp;
         }
 
-        // Replace horizontal part with wish; keep vertical speed for jump and fall.
-        vel = _wishPlanarVelocity + up * Vector3.Dot(vel, up);
+        // Replace horizontal part of velocity with wish; keep vertical speed for jump and fall.
+        Vector3 horizontalWish = Vector3.ProjectOnPlane(_wishPlanarVelocity, up);
+        horizontalWish = SlideHorizontalAlongWalls(horizontalWish, up);
+
+        vel = horizontalWish + up * Vector3.Dot(vel, up);
 
         if (_jumpPressed)
         {
