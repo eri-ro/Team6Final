@@ -33,13 +33,16 @@ public class LevelGoal : MonoBehaviour
     [SerializeField]
     Animator _endAnimation;
 
-    [Header("Timer")]
+    [Header("Timer and Fallcount")]
 
     [SerializeField]
     Timer _levelTimer;
 
     [SerializeField]
     TextMeshProUGUI _timeTakenText;
+
+    [SerializeField]
+    TextMeshProUGUI _fallCountText;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -78,6 +81,8 @@ public class LevelGoal : MonoBehaviour
             //Changes text to show remaining time
             _timeTakenText.text = "Time Remaining: " + string.Format("{0:00}:{1:00}", minutes, seconds);
 
+            
+
             _endAnimation.SetTrigger("LevelEnd");
         }
     }
@@ -85,5 +90,11 @@ public class LevelGoal : MonoBehaviour
     public void RetryLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ChangeFallCount(int falls)
+    {
+        //Changes text to show fall count
+        _fallCountText.text = "Falls: " + falls.ToString();
     }
 }
