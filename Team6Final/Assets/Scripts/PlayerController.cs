@@ -239,4 +239,23 @@ public class PlayerController : MonoBehaviour
             Debug.Log("None Selected");
         }
     }
+
+    public void ChangeAbility(int abilityValue)
+    {
+        switch (abilityValue)
+        {
+            case 0:
+                ability = AbilityState.None;
+                break;
+            case 1:
+                ability = AbilityState.Dash;
+                break;
+            case 2:
+                ability = AbilityState.HighJump;
+                break;
+            case 3:
+                ability = AbilityState.GravityShift;
+                break;
+        }
+    }
 }

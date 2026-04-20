@@ -6,6 +6,8 @@ TagManager:
   tags:
   - GravitySurface
   - Breakable
+  - Checkpoint
+  - Killplane
   layers:
   - Default
   - TransparentFX
