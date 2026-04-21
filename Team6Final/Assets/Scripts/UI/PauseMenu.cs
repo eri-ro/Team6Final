@@ -1,57 +1,79 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Attach to the root Canvas (or any always-active object)
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+
     public static bool isPaused;
-    
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
-        pauseMenu.SetActive(false);
+        if (pauseMenu == null)
+        {
+            Transform t = transform.Find("PauseMenu");
+            if (t != null)
+                pauseMenu = t.gameObject;
+        }
+
+        if (pauseMenu == null)
+            Debug.LogError("PauseMenu: assign pause panel or add a child named PauseMenu.", this);
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        if (pauseMenu != null)
+            pauseMenu.SetActive(false);
+    }
+
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (pauseMenu == null)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
-            {
                 ResumeGame();
-            }
             else
-            {
                 PauseGame();
-            }
         }
     }
 
     public void PauseGame()
-    { 
+    {
+        if (pauseMenu == null)
+            return;
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ResumeGame()
     {
+        if (pauseMenu == null)
+            return;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void RestartLevel()
     {
+        Time.timeScale = 1f;
+        isPaused = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void BackToHub()
     {
         Time.timeScale = 1f;
+        isPaused = false;
         SceneManager.LoadScene("Hub Area");
     }
 
