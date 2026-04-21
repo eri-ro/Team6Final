@@ -142,7 +142,6 @@ public class Timer : MonoBehaviour
         if (_playerPrefab != null)
         {
             _playerPrefab.GetComponent<PlayerMotor>().enabled = true;
-            _playerPrefab.GetComponent<PlayerController>().ChangeAbility(abilityValue);
         }
         else
         {

@@ -37,11 +37,11 @@ public class PlayerGravityShift : MonoBehaviour
         _motor = GetComponent<PlayerMotor>();
     }
 
-    // Called when the player presses the gravity-shift ability. Does nothing if still on cooldown or no valid target.
-    public void TryExecuteShift()
+    /// <returns>True if gravity shifted to a valid surface (not on cooldown or no valid target).</returns>
+    public bool TryExecuteShift()
     {
         if (Time.time < _successCooldownEndTime)
-            return;
+            return false;
 
         Vector3 up = GravityWorld.Up;
         Vector3 origin;
@@ -66,7 +66,7 @@ public class PlayerGravityShift : MonoBehaviour
 
         // Need a hit on a valid tagged surface; otherwise we exit with no cooldown (player can try again).
         if (!TryFindShiftTarget(origin, dir, maxRayDistance, out RaycastHit hit))
-            return;
+            return false;
 
         // Remember old "up" so we can pick a sensible forward direction on the new surface.
         Vector3 oldUp = GravityWorld.Up;
@@ -98,6 +98,7 @@ public class PlayerGravityShift : MonoBehaviour
         _successCooldownEndTime = Time.time + cd;
         //Emit particles
         _gravityShiftParticleSystem.Emit(_gravityShiftParticlesEmission);
+        return true;
     }
 
     // Cast a short ray inside the collider to read a cleaner normal at the hit point.

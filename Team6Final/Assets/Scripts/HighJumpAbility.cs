@@ -41,29 +41,30 @@ public class HighJumpAbility : MonoBehaviour
         _wasAirborneLastFrame = !grounded;
     }
 
-    // Called from PlayerController when HighJump is selected and the ability key is pressed.
-    public void UseAbility()
+    // True if the high-jump ability was actualy used 
+    public bool UseAbility()
     {
         if (_motor == null)
-            return;
+            return false;
 
         if (Time.time < _successCooldownEndTime)
-            return;
+            return false;
 
         bool grounded = _motor.IsGroundedForLogic();
 
-        // Still in the air from a previous high jump — no second use until landing.
+        // Still in the air from a previous high jump 
         if (_airborneFromHighJump && !grounded)
-            return;
+            return false;
 
         if (!_motor.ApplyHighJumpImpulse())
-            return;
+            return false;
 
         float cd = _player != null ? _player.abilitySuccessCooldownSeconds : 1f;
         _successCooldownEndTime = Time.time + cd;
         //Emit Particles
         _highJumpParticleSystem.Emit(_highJumpParticleEmission);
-        
+
         _airborneFromHighJump = true;
+        return true;
     }
 }

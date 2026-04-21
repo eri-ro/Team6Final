@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
     PlayerGravityShift _gravityShift;
     DashAbility _dash;
     HighJumpAbility _highJump;
+    AbilitySoundController _abilitySounds;
 
     // Grab references to other components on this GameObject.
     void Awake()
@@ -87,6 +88,7 @@ public class PlayerController : MonoBehaviour
         _gravityShift = GetComponent<PlayerGravityShift>();
         _dash = GetComponent<DashAbility>();
         _highJump = GetComponent<HighJumpAbility>();
+        _abilitySounds = GetComponent<AbilitySoundController>();
     }
 
     // Lock the cursor for mouse-look when the scene starts.
@@ -113,14 +115,6 @@ public class PlayerController : MonoBehaviour
     // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
     void Move()
     {
-        // Escape toggles whether the cursor is locked.
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            bool locked = Cursor.lockState == CursorLockMode.Locked;
-            Cursor.lockState = locked ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = locked;
-        }
-
         if (playerCamera == null || _rb == null)
             return;
 
@@ -237,25 +231,6 @@ public class PlayerController : MonoBehaviour
         {
             ability = AbilityState.None;
             Debug.Log("None Selected");
-        }
-    }
-
-    public void ChangeAbility(int abilityValue)
-    {
-        switch (abilityValue)
-        {
-            case 0:
-                ability = AbilityState.None;
-                break;
-            case 1:
-                ability = AbilityState.Dash;
-                break;
-            case 2:
-                ability = AbilityState.HighJump;
-                break;
-            case 3:
-                ability = AbilityState.GravityShift;
-                break;
         }
     }
 }
