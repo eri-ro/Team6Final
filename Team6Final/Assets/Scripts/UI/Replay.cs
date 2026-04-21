@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UI_MainMenu : MonoBehaviour
+public class Replay : MonoBehaviour
 {
-    public void PlayGame()
+    public void LoadScene()
     {
         SceneManager.LoadScene("Demo");
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
     }
 }
