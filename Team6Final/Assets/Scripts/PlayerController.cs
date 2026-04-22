@@ -113,13 +113,13 @@ public class PlayerController : MonoBehaviour
     // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
     void Move()
     {
-        // Escape toggles whether the cursor is locked.
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            bool locked = Cursor.lockState == CursorLockMode.Locked;
-            Cursor.lockState = locked ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = locked;
-        }
+        //// Escape toggles whether the cursor is locked.
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    bool locked = Cursor.lockState == CursorLockMode.Locked;
+        //    Cursor.lockState = locked ? CursorLockMode.None : CursorLockMode.Locked;
+        //    Cursor.visible = locked;
+        //}
 
         if (playerCamera == null || _rb == null)
             return;
