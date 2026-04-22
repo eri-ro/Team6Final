@@ -78,7 +78,7 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         isPaused = false;
-        SceneManager.LoadScene("Hub Area");
+        SceneManager.LoadScene(0);
     }
 
     public void QuitGame()
