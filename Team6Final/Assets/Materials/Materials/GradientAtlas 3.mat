@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GradientAtlas 2
-  m_Shader: {fileID: -6465566751694194690, guid: 57f991b00a505894aa800fbb754c66e4, type: 3}
+  m_Name: GradientAtlas 3
+  m_Shader: {fileID: -6465566751694194690, guid: 0dcad93cfb940244dbe16da97e0c9340, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
