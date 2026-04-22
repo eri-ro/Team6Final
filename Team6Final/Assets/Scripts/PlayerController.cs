@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
     // True on the frame the player presses the ability key.
     bool AbilityTriggerDown()
     {
-        return Input.GetKeyDown(abilityKey) || Input.GetKeyDown(KeyCode.JoystickButton0);
+        return Input.GetKeyDown(abilityKey) || Input.GetKeyDown(KeyCode.JoystickButton2);
     }
 
     // Calls the script that matches the current ability slot.
