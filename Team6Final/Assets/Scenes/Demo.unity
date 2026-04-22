@@ -143,6 +143,7 @@ MonoBehaviour:
   checkpointSpinSpeed: 5
   checkpointSpinDuration: 1.5
   playerFallCount: 0
+  checkpointClip: {fileID: 0}
 --- !u!1 &83668234
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +306,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 220930969644554160, guid: d1c18fcbb751d944dbf51a1d84a278d8, type: 3}
+      propertyPath: _player
+      value: 
+      objectReference: {fileID: 1282806}
     - target: {fileID: 220930969644554160, guid: d1c18fcbb751d944dbf51a1d84a278d8, type: 3}
       propertyPath: _playerPrefab
       value: 

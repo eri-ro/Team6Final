@@ -25,7 +25,7 @@ public class LevelGoal : MonoBehaviour
         _playerCamera,
         _endCamera;
 
-    [Header("Animatior")]
+    [Header("Animator")]
 
     [SerializeField]
     Animator _endAnimation;
@@ -47,14 +47,14 @@ public class LevelGoal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Checks to see if player entered collider
-        if (other.gameObject.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             // Play goal sound if player has audiosource and goalclip is set
-            if (other.GetComponent<AudioSource>() != null && _goalClip != null)
+            if (_goalClip != null)
             {
-                AudioSource audioSource;
-                audioSource = other.GetComponent<AudioSource>();
-                audioSource.PlayOneShot(_goalClip);
+                AudioSource src = other.GetComponent<AudioSource>();
+                if (src != null)
+                    src.PlayOneShot(_goalClip);
             }
 
             //Stops player movement, and unlocks the mouse

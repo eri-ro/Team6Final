@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Timer : MonoBehaviour
 {
@@ -74,7 +73,7 @@ public class Timer : MonoBehaviour
                 _remainingTime = 0;
                 _started = false;
 
-                // Disables/Enables player movement debending on what is set
+                // Disables/enables player movement depending on what is set
                 if (_enablePlayerMovementOnFinish)
                 {
                     EnablePlayerMovement(_abilityValue);
@@ -94,18 +93,18 @@ public class Timer : MonoBehaviour
                 //Displays end text if useEndText is true
                 if (_useEndText)
                 {
-                    _timerText.text = _timerEndText;
+                    if (_timerText != null)
+                        _timerText.text = _timerEndText;
                     return;
                 }
+
                 // Attempts to play all animations set in Followup Animations
-                if (_followupAnimations.Length > 0)
+                if (_followupAnimations != null)
                 {
                     for (int i = 0; i < _followupAnimations.Length; i++)
                     {
-                        if ( _followupAnimations[i] != null)
-                        {
+                        if (_followupAnimations[i] != null)
                             _followupAnimations[i].SetTrigger("TimerComplete");
-                        }
                     }
                 }
                 // Plays timerEndClip audio if set
@@ -114,25 +113,23 @@ public class Timer : MonoBehaviour
                     audioSource.PlayOneShot(timerEndClip);
                 }
             }
+
+            if (_timerText == null)
+                return;
+
             //Make minutes and seconds into whole numbers
             int minutes = Mathf.FloorToInt(_remainingTime / 60);
             int seconds = Mathf.FloorToInt(_remainingTime % 60);
 
             //Increases seconds by one if _skipZero is enabled
             if (minutes == 0 && _skipZero)
-            {
                 seconds++;
-            }
 
             //Displays time in 00:00 format if _includeMinutes is true
             if (_includeMinutes)
-            {
                 _timerText.text = _textBeforeTimer + string.Format("{0:00}:{1:00}", minutes, seconds);
-            }
             else
-            {
                 _timerText.text = _textBeforeTimer + seconds.ToString();
-            }
         }
     }
 
@@ -148,7 +145,7 @@ public class Timer : MonoBehaviour
 
     public void HideTimer()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     //Enables the player to move, used after the intro countdown
     public void EnablePlayerMovement(int abilityValue)
