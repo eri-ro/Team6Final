@@ -55,34 +55,29 @@ public class DashAbility : MonoBehaviour
         return true;
     }
 
-    public void UseAbility()
+    //True if a dash actually started and not on cooldown or already dashing
+    public bool UseAbility()
     {
         if (playerController == null)
-            return;
+            return false;
 
         if (Time.time < _successCooldownEndTime)
-            return;
+            return false;
 
         if (isDashing)
-            return;
+            return false;
 
         dashTime = 0.5f;
 
         if (_motor != null && _motor.IsGroundedForLogic())
-        {
             Debug.Log("Ground Dash!");
-            BeginDash(dashTime);
-        }
         else if (_motor != null && !_motor.IsGroundedForLogic())
-        {
             Debug.Log("Air Dash!");
-            BeginDash(dashTime);
-        }
         else
-        {
             Debug.Log("Dash!");
-            BeginDash(dashTime);
-        }
+
+        BeginDash(dashTime);
+        return true;
     }
 
     void BeginDash(float duration)

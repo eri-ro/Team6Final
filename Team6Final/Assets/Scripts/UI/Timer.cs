@@ -56,6 +56,10 @@ public class Timer : MonoBehaviour
     [Tooltip("Sends a TimerComplete signal to every animator")]
     Animator[] _followupAnimations;
 
+    [Header("Sound")]
+    public AudioClip timerEndClip;
+    public AudioSource audioSource;
+
     // Update is called once per frame
     void Update()
     {
@@ -71,6 +75,8 @@ public class Timer : MonoBehaviour
             {
                 _remainingTime = 0;
                 _started = false;
+
+                // Disables/Enables player movement debending on what is set
                 if (_enablePlayerMovementOnFinish)
                 {
                     EnablePlayerMovement(_abilityValue);
@@ -79,16 +85,21 @@ public class Timer : MonoBehaviour
                 {
                     DisablePlayerMovement(!_useEndText);
                 }
+
+                //Starts the next timer if linked and _startNextTimer is true
                 if (_startNextTimer && _nextTimer != null)
                 {
                     _nextTimer.StartTimer();
                     _nextTimer.gameObject.SetActive(true);
                 }
+
+                //Displays end text if useEndText is true
                 if (_useEndText)
                 {
                     _timerText.text = _timerEndText;
                     return;
                 }
+                // Attempts to play all animations set in Followup Animations
                 if (_followupAnimations.Length > 0)
                 {
                     for (int i = 0; i < _followupAnimations.Length; i++)
@@ -98,6 +109,11 @@ public class Timer : MonoBehaviour
                             _followupAnimations[i].SetTrigger("TimerComplete");
                         }
                     }
+                }
+                // Plays timerEndClip audio if set
+                if (audioSource != null && timerEndClip != null)
+                {
+                    audioSource.PlayOneShot(timerEndClip);
                 }
             }
             //Make minutes and seconds into whole numbers

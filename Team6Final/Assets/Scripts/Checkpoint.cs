@@ -10,6 +10,9 @@ public class Checkpoint : MonoBehaviour
     public float checkpointSpinDuration = 3.0f;
 
     public int playerFallCount;
+
+    [Header("Sound")]
+    public AudioClip checkpointClip;
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Checkpoint")
@@ -26,6 +29,16 @@ public class Checkpoint : MonoBehaviour
             {
                 other.GetComponent<ParticleStopper>().stopParticles();
             }
+
+            // Check and see if checkpoint has a valid audioSource, then play the checkpoint sound from it
+            if (other.GetComponent<AudioSource>() != null && checkpointClip != null)
+            {
+                AudioSource audioSource;
+                audioSource = other.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(checkpointClip);
+            }
+
+
             // Disables the boxcollider so the checkpoint cannot be activated twice
             other.GetComponent<BoxCollider>().enabled = false;
         }

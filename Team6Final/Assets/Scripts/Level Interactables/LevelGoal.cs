@@ -44,11 +44,22 @@ public class LevelGoal : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI _fallCountText;
 
+    [Header("Sound")]
+    [SerializeField] AudioClip _goalClip;
+
     private void OnTriggerEnter(Collider other)
     {
         //Checks to see if player entered collider
         if (other.gameObject.tag == "Player")
         {
+            // Play goal sound if player has audiosource and goalclip is set
+            if (other.GetComponent<AudioSource>() != null && _goalClip != null)
+            {
+                AudioSource audioSource;
+                audioSource = other.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(_goalClip);
+            }
+
             //Stops player movement, and unlocks the mouse
             other.GetComponent<PlayerMotor>().ClearVelocity();
             other.GetComponent<PlayerController>().enabled = false;

@@ -8,6 +8,8 @@ public class PauseMenu : MonoBehaviour
 
     public static bool isPaused;
 
+    public AudioSource musicPlayer;
+
     void Awake()
     {
         if (pauseMenu == null)
@@ -50,6 +52,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        musicPlayer.Pause();
     }
 
     public void ResumeGame()
@@ -61,6 +64,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        musicPlayer.Play();
     }
 
     public void RestartLevel()

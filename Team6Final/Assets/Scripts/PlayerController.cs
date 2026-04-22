@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
     DashAbility _dash;
     HighJumpAbility _highJump;
 
+    AbilitySoundController _abilitySounds;
+
     // Grab references to other components on this GameObject.
     void Awake()
     {
@@ -87,6 +89,7 @@ public class PlayerController : MonoBehaviour
         _gravityShift = GetComponent<PlayerGravityShift>();
         _dash = GetComponent<DashAbility>();
         _highJump = GetComponent<HighJumpAbility>();
+        _abilitySounds = GetComponent<AbilitySoundController>();
     }
 
     // Lock the cursor for mouse-look when the scene starts.
@@ -199,20 +202,31 @@ public class PlayerController : MonoBehaviour
         if (!AbilityTriggerDown())
             return;
 
+        bool success = false;
+
         switch (ability)
         {
             case AbilityState.Dash:
-                _dash?.UseAbility();
+                if (_dash != null)
+                    success = _dash.UseAbility();
                 break;
+
             case AbilityState.HighJump:
-                _highJump?.UseAbility();
+                if (_highJump != null)
+                    success = _highJump.UseAbility();
                 break;
+
             case AbilityState.GravityShift:
-                _gravityShift?.TryExecuteShift();
+                if (_gravityShift != null)
+                    success = _gravityShift.TryExecuteShift();
                 break;
+
             default:
                 break;
         }
+
+        if (success && _abilitySounds != null)
+            _abilitySounds.PlayAbilitySound(ability);
     }
 
     // Simple keyboard hotkeys to change which ability is selected.
