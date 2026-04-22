@@ -13,6 +13,13 @@ public class Checkpoint : MonoBehaviour
 
     [Header("Sound")]
     public AudioClip checkpointClip;
+
+    void Awake()
+    {
+        if (spawnPoint == null)
+            spawnPoint = transform;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Checkpoint")
@@ -44,7 +51,10 @@ public class Checkpoint : MonoBehaviour
         }
         else if (other.tag == "Killplane")
         {
-            gameObject.transform.position = spawnPoint.transform.position;
+            if (spawnPoint != null)
+                gameObject.transform.position = spawnPoint.position;
+            else
+                gameObject.transform.position = transform.position;
             playerFallCount++;
         }
         else if (other.tag == "Goal")
