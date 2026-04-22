@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
 
     public static bool isPaused;
 
+    [Tooltip("Background music on an AudioSource")]
     public AudioSource musicPlayer;
 
     void Awake()
@@ -52,7 +53,8 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        musicPlayer.Pause();
+        if (musicPlayer != null)
+            musicPlayer.Pause();
     }
 
     public void ResumeGame()
@@ -64,7 +66,8 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        musicPlayer.Play();
+        if (musicPlayer != null)
+            musicPlayer.Play();
     }
 
     public void RestartLevel()

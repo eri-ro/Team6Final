@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
@@ -32,7 +29,7 @@ public class Timer : MonoBehaviour
 
     [Header("Connect To Player")]
     [SerializeField]
-    Object _playerPrefab;
+    GameObject _player;
 
     [SerializeField]
     [Tooltip("0 = none, 1 = dash, 2 = highjump, 3 = gravityshift")]
@@ -76,7 +73,7 @@ public class Timer : MonoBehaviour
                 _remainingTime = 0;
                 _started = false;
 
-                // Disables/Enables player movement debending on what is set
+                // Disables/enables player movement depending on what is set
                 if (_enablePlayerMovementOnFinish)
                 {
                     EnablePlayerMovement(_abilityValue);
@@ -96,18 +93,18 @@ public class Timer : MonoBehaviour
                 //Displays end text if useEndText is true
                 if (_useEndText)
                 {
-                    _timerText.text = _timerEndText;
+                    if (_timerText != null)
+                        _timerText.text = _timerEndText;
                     return;
                 }
+
                 // Attempts to play all animations set in Followup Animations
-                if (_followupAnimations.Length > 0)
+                if (_followupAnimations != null)
                 {
                     for (int i = 0; i < _followupAnimations.Length; i++)
                     {
-                        if ( _followupAnimations[i] != null)
-                        {
+                        if (_followupAnimations[i] != null)
                             _followupAnimations[i].SetTrigger("TimerComplete");
-                        }
                     }
                 }
                 // Plays timerEndClip audio if set
@@ -116,25 +113,23 @@ public class Timer : MonoBehaviour
                     audioSource.PlayOneShot(timerEndClip);
                 }
             }
+
+            if (_timerText == null)
+                return;
+
             //Make minutes and seconds into whole numbers
             int minutes = Mathf.FloorToInt(_remainingTime / 60);
             int seconds = Mathf.FloorToInt(_remainingTime % 60);
 
             //Increases seconds by one if _skipZero is enabled
             if (minutes == 0 && _skipZero)
-            {
                 seconds++;
-            }
 
             //Displays time in 00:00 format if _includeMinutes is true
             if (_includeMinutes)
-            {
                 _timerText.text = _textBeforeTimer + string.Format("{0:00}:{1:00}", minutes, seconds);
-            }
             else
-            {
                 _timerText.text = _textBeforeTimer + seconds.ToString();
-            }
         }
     }
 
@@ -150,32 +145,38 @@ public class Timer : MonoBehaviour
 
     public void HideTimer()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     //Enables the player to move, used after the intro countdown
     public void EnablePlayerMovement(int abilityValue)
     {
-        if (_playerPrefab != null)
+        if (_player != null)
         {
-            _playerPrefab.GetComponent<PlayerMotor>().enabled = true;
-            _playerPrefab.GetComponent<PlayerController>().ChangeAbility(abilityValue);
+            _player.GetComponent<PlayerMotor>().enabled = true;
+            _player.GetComponent<PlayerController>().ChangeAbility(abilityValue);
         }
         else
         {
-            Debug.Log("Connect the player prefab to this timer to disable their movement!");
+            Debug.Log("Connect the player GameObject to the Timer to disable their movement!", this);
         }
     }
     //Stops all player movement and unlocks the mouse, used whenever the player game overs. Also hides the timer if there is no end text
     public void DisablePlayerMovement(bool hideTimer)
     {
-        _playerPrefab.GetComponent<PlayerMotor>().ClearVelocity();
-        _playerPrefab.GetComponent<PlayerController>().enabled = false;
-        _playerPrefab.GetComponent<PlayerMotor>().enabled = false;
+        if (_player == null)
+        {
+            Debug.Log("Connect the player GameObject to the Timer to disable their movement!", this);
+            if (hideTimer)
+                HideTimer();
+            return;
+        }
+
+        _player.GetComponent<PlayerMotor>().ClearVelocity();
+        _player.GetComponent<PlayerController>().enabled = false;
+        _player.GetComponent<PlayerMotor>().enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         if (hideTimer)
-        {
             HideTimer();
-        }
     }
 }

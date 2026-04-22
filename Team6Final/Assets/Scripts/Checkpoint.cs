@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
@@ -13,43 +12,50 @@ public class Checkpoint : MonoBehaviour
 
     [Header("Sound")]
     public AudioClip checkpointClip;
+
+    void Awake()
+    {
+        if (spawnPoint == null)
+            spawnPoint = transform;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Checkpoint")
+        if (other.CompareTag("Checkpoint"))
         {
             // Sets player spawnpoint to the checkpoint
             spawnPoint = other.transform.GetChild(0);
             // If the checkpoint has the compnents, it will speed up the animation then slow it down, and disable the particle effects and show the "CHECKPOINT" UI
-            if (other.gameObject.GetComponent<Animator>() != null)
-            {
-                Animator noteSpin = other.gameObject.GetComponent<Animator>();
-                StartCoroutine(QuickSpin(checkpointSpinDuration, noteSpin));
-            }
-            if (other.GetComponent<ParticleStopper>() != null)
-            {
-                other.GetComponent<ParticleStopper>().stopParticles();
-            }
+
+            Animator anim = other.gameObject.GetComponent<Animator>();
+            if (anim != null)
+                StartCoroutine(QuickSpin(checkpointSpinDuration, anim));
+
+            ParticleStopper stopper = other.GetComponent<ParticleStopper>();
+            if (stopper != null)
+                stopper.stopParticles();
 
             // Check and see if checkpoint has a valid audioSource, then play the checkpoint sound from it
-            if (other.GetComponent<AudioSource>() != null && checkpointClip != null)
+            if (checkpointClip != null)
             {
-                AudioSource audioSource;
-                audioSource = other.GetComponent<AudioSource>();
-                audioSource.PlayOneShot(checkpointClip);
+                AudioSource src = other.GetComponent<AudioSource>();
+                if (src != null)
+                    src.PlayOneShot(checkpointClip);
             }
-
 
             // Disables the boxcollider so the checkpoint cannot be activated twice
             other.GetComponent<BoxCollider>().enabled = false;
         }
-        else if (other.tag == "Killplane")
+        else if (other.CompareTag("Killplane"))
         {
-            gameObject.transform.position = spawnPoint.transform.position;
+            transform.position = spawnPoint != null ? spawnPoint.position : transform.position;
             playerFallCount++;
         }
-        else if (other.tag == "Goal")
+        else if (other.CompareTag("Goal"))
         {
-            other.GetComponent<LevelGoal>().ChangeFallCount(playerFallCount);
+            LevelGoal goal = other.GetComponent<LevelGoal>();
+            if (goal != null)
+                goal.ChangeFallCount(playerFallCount);
         }
     }
 
