@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -44,11 +41,22 @@ public class LevelGoal : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI _fallCountText;
 
+    [Header("Sound")]
+    [SerializeField] AudioClip _goalClip;
+
     private void OnTriggerEnter(Collider other)
     {
         //Checks to see if player entered collider
         if (other.gameObject.tag == "Player")
         {
+            // Play goal sound if player has audiosource and goalclip is set
+            if (other.GetComponent<AudioSource>() != null && _goalClip != null)
+            {
+                AudioSource audioSource;
+                audioSource = other.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(_goalClip);
+            }
+
             //Stops player movement, and unlocks the mouse
             other.GetComponent<PlayerMotor>().ClearVelocity();
             other.GetComponent<PlayerController>().enabled = false;
@@ -57,12 +65,17 @@ public class LevelGoal : MonoBehaviour
             Cursor.visible = true;
 
             //Stops the level timer and hides it
-            _levelTimer.StopTimer();
-            _levelTimer.HideTimer();
+            if (_levelTimer != null)
+            {
+                _levelTimer.StopTimer();
+                _levelTimer.HideTimer();
+            }
 
             //Does a pulse effect on the goal and stops any further particles from spawning
-            _finishParticleSystem.Emit(_finishParticleEmission);
-            _goalParticleSystem.Stop();
+            if (_finishParticleSystem != null)
+                _finishParticleSystem.Emit(_finishParticleEmission);
+            if (_goalParticleSystem != null)
+                _goalParticleSystem.Stop();
 
             //Switches camera to an overhead view of the player if cameras are set and _switchCameras is true
             if (_switchCameras && _endCamera != null && _playerCamera != null)
@@ -72,18 +85,16 @@ public class LevelGoal : MonoBehaviour
             }
 
             //Gets the remaining time
-            float remainingTime = _levelTimer._remainingTime;
-            
-            //Make minutes and seconds into whole numbers
-            int minutes = Mathf.FloorToInt(remainingTime / 60);
-            int seconds = Mathf.FloorToInt(remainingTime % 60);
+            if (_levelTimer != null && _timeTakenText != null)
+            {
+                float remainingTime = _levelTimer._remainingTime;
+                int minutes = Mathf.FloorToInt(remainingTime / 60);
+                int seconds = Mathf.FloorToInt(remainingTime % 60);
+                _timeTakenText.text = "Time Remaining: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+            }
 
-            //Changes text to show remaining time
-            _timeTakenText.text = "Time Remaining: " + string.Format("{0:00}:{1:00}", minutes, seconds);
-
-            
-
-            _endAnimation.SetTrigger("LevelEnd");
+            if (_endAnimation != null)
+                _endAnimation.SetTrigger("LevelEnd");
         }
     }
 
@@ -95,6 +106,7 @@ public class LevelGoal : MonoBehaviour
     public void ChangeFallCount(int falls)
     {
         //Changes text to show fall count
-        _fallCountText.text = "Falls: " + falls.ToString();
+        if (_fallCountText != null)
+            _fallCountText.text = "Falls: " + falls.ToString();
     }
 }

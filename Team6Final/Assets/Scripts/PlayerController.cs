@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
     PlayerGravityShift _gravityShift;
     DashAbility _dash;
     HighJumpAbility _highJump;
+
     AbilitySoundController _abilitySounds;
 
     // Grab references to other components on this GameObject.
@@ -115,6 +116,14 @@ public class PlayerController : MonoBehaviour
     // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
     void Move()
     {
+        //// Escape toggles whether the cursor is locked.
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    bool locked = Cursor.lockState == CursorLockMode.Locked;
+        //    Cursor.lockState = locked ? CursorLockMode.None : CursorLockMode.Locked;
+        //    Cursor.visible = locked;
+        //}
+
         if (playerCamera == null || _rb == null)
             return;
 
@@ -193,20 +202,31 @@ public class PlayerController : MonoBehaviour
         if (!AbilityTriggerDown())
             return;
 
+        bool success = false;
+
         switch (ability)
         {
             case AbilityState.Dash:
-                _dash?.UseAbility();
+                if (_dash != null)
+                    success = _dash.UseAbility();
                 break;
+
             case AbilityState.HighJump:
-                _highJump?.UseAbility();
+                if (_highJump != null)
+                    success = _highJump.UseAbility();
                 break;
+
             case AbilityState.GravityShift:
-                _gravityShift?.TryExecuteShift();
+                if (_gravityShift != null)
+                    success = _gravityShift.TryExecuteShift();
                 break;
+
             default:
                 break;
         }
+
+        if (success && _abilitySounds != null)
+            _abilitySounds.PlayAbilitySound(ability);
     }
 
     // Simple keyboard hotkeys to change which ability is selected.
@@ -231,6 +251,25 @@ public class PlayerController : MonoBehaviour
         {
             ability = AbilityState.None;
             Debug.Log("None Selected");
+        }
+    }
+
+    public void ChangeAbility(int abilityValue)
+    {
+        switch (abilityValue)
+        {
+            case 0:
+                ability = AbilityState.None;
+                break;
+            case 1:
+                ability = AbilityState.Dash;
+                break;
+            case 2:
+                ability = AbilityState.HighJump;
+                break;
+            case 3:
+                ability = AbilityState.GravityShift;
+                break;
         }
     }
 }

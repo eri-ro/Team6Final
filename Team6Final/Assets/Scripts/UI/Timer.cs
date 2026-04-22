@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Timer : MonoBehaviour
 {
@@ -32,7 +30,7 @@ public class Timer : MonoBehaviour
 
     [Header("Connect To Player")]
     [SerializeField]
-    Object _playerPrefab;
+    GameObject _player;
 
     [SerializeField]
     [Tooltip("0 = none, 1 = dash, 2 = highjump, 3 = gravityshift")]
@@ -56,6 +54,10 @@ public class Timer : MonoBehaviour
     [Tooltip("Sends a TimerComplete signal to every animator")]
     Animator[] _followupAnimations;
 
+    [Header("Sound")]
+    public AudioClip timerEndClip;
+    public AudioSource audioSource;
+
     // Update is called once per frame
     void Update()
     {
@@ -71,6 +73,8 @@ public class Timer : MonoBehaviour
             {
                 _remainingTime = 0;
                 _started = false;
+
+                // Disables/Enables player movement debending on what is set
                 if (_enablePlayerMovementOnFinish)
                 {
                     EnablePlayerMovement(_abilityValue);
@@ -79,16 +83,21 @@ public class Timer : MonoBehaviour
                 {
                     DisablePlayerMovement(!_useEndText);
                 }
+
+                //Starts the next timer if linked and _startNextTimer is true
                 if (_startNextTimer && _nextTimer != null)
                 {
                     _nextTimer.StartTimer();
                     _nextTimer.gameObject.SetActive(true);
                 }
+
+                //Displays end text if useEndText is true
                 if (_useEndText)
                 {
                     _timerText.text = _timerEndText;
                     return;
                 }
+                // Attempts to play all animations set in Followup Animations
                 if (_followupAnimations.Length > 0)
                 {
                     for (int i = 0; i < _followupAnimations.Length; i++)
@@ -98,6 +107,11 @@ public class Timer : MonoBehaviour
                             _followupAnimations[i].SetTrigger("TimerComplete");
                         }
                     }
+                }
+                // Plays timerEndClip audio if set
+                if (audioSource != null && timerEndClip != null)
+                {
+                    audioSource.PlayOneShot(timerEndClip);
                 }
             }
             //Make minutes and seconds into whole numbers
@@ -139,26 +153,33 @@ public class Timer : MonoBehaviour
     //Enables the player to move, used after the intro countdown
     public void EnablePlayerMovement(int abilityValue)
     {
-        if (_playerPrefab != null)
+        if (_player != null)
         {
-            _playerPrefab.GetComponent<PlayerMotor>().enabled = true;
+            _player.GetComponent<PlayerMotor>().enabled = true;
+            _player.GetComponent<PlayerController>().ChangeAbility(abilityValue);
         }
         else
         {
-            Debug.Log("Connect the player prefab to this timer to disable their movement!");
+            Debug.Log("Connect the player GameObject to the Timer to disable their movement!", this);
         }
     }
     //Stops all player movement and unlocks the mouse, used whenever the player game overs. Also hides the timer if there is no end text
     public void DisablePlayerMovement(bool hideTimer)
     {
-        _playerPrefab.GetComponent<PlayerMotor>().ClearVelocity();
-        _playerPrefab.GetComponent<PlayerController>().enabled = false;
-        _playerPrefab.GetComponent<PlayerMotor>().enabled = false;
+        if (_player == null)
+        {
+            Debug.Log("Connect the player GameObject to the Timer to disable their movement!", this);
+            if (hideTimer)
+                HideTimer();
+            return;
+        }
+
+        _player.GetComponent<PlayerMotor>().ClearVelocity();
+        _player.GetComponent<PlayerController>().enabled = false;
+        _player.GetComponent<PlayerMotor>().enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         if (hideTimer)
-        {
             HideTimer();
-        }
     }
 }

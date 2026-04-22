@@ -37,9 +37,11 @@ public class PlayerGravityShift : MonoBehaviour
         _motor = GetComponent<PlayerMotor>();
     }
 
-    /// <returns>True if gravity shifted to a valid surface (not on cooldown or no valid target).</returns>
+    // Called when the player presses the gravity-shift ability. Does nothing if still on cooldown or no valid target.
+    // FIXED: now returns bool
     public bool TryExecuteShift()
     {
+        // Cooldown check
         if (Time.time < _successCooldownEndTime)
             return false;
 
@@ -49,7 +51,6 @@ public class PlayerGravityShift : MonoBehaviour
         Camera cam = _player != null ? _player.playerCamera : null;
         float maxRayDistance = wallInteractDistance;
 
-        // Aim from screen center through the camera, or from the player body if no camera.
         if (cam != null)
         {
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
@@ -64,31 +65,25 @@ public class PlayerGravityShift : MonoBehaviour
             dir = GravityAlignment.FlattenOnSurface(transform.forward, up);
         }
 
-        // Need a hit on a valid tagged surface; otherwise we exit with no cooldown (player can try again).
+        // fail if no valid surface
         if (!TryFindShiftTarget(origin, dir, maxRayDistance, out RaycastHit hit))
             return false;
 
-        // Remember old "up" so we can pick a sensible forward direction on the new surface.
         Vector3 oldUp = GravityWorld.Up;
-        // Surface normal from the ray hit; that becomes our new ceiling-to-floor direction.
         Vector3 newUp = hit.normal.normalized;
-        // Normal should point "out" from the wall toward the player, not into the wall.
+
         if (Vector3.Dot(newUp, dir) > 0f)
             newUp = -newUp;
 
-        // Clean up the normal using the collider (helps on curved or messy meshes).
         newUp = ResampleWalkableNormal(hit.collider, hit.point, newUp);
         newUp = AlignWalkableUpToPlaneOrientation(hit.collider, newUp);
 
-        // This updates global gravity and Physics.gravity right away (physics does not wait for smoothing).
         GravityWorld.SetGravityUp(newUp);
 
         Vector3 nu = GravityWorld.Up;
-        // Face roughly the same way you were looking, but flattened onto the new floor.
         Vector3 fwd = ForwardOnTangentPlane(nu, oldUp, dir);
         ApplyRotationWithExactUp(fwd, nu);
 
-        // Move the capsule so feet touch the surface without overlapping it.
         SnapCapsuleToSurface(hit, nu);
 
         _motor?.ClearVelocity();
@@ -96,8 +91,11 @@ public class PlayerGravityShift : MonoBehaviour
 
         float cd = _player != null ? _player.abilitySuccessCooldownSeconds : 1f;
         _successCooldownEndTime = Time.time + cd;
-        //Emit particles
-        _gravityShiftParticleSystem.Emit(_gravityShiftParticlesEmission);
+
+        // Emit particles
+        if (_gravityShiftParticleSystem != null)
+            _gravityShiftParticleSystem.Emit(_gravityShiftParticlesEmission);
+
         return true;
     }
 

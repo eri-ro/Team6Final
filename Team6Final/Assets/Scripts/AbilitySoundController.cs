@@ -1,12 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
- 
+
 public class AbilitySoundController : MonoBehaviour
 {
     public AudioSource audioSource;
 
-    public AudioClip dashClip;
-    public AudioClip gravityClip;
-    public AudioClip highJumpClip;
+    public AudioClip[] dashClip;
+    public AudioClip[] gravityClip;
+    public AudioClip[] highJumpClip;
 
     public void PlayAbilitySound(PlayerController.AbilityState ability)
     {
@@ -26,9 +28,12 @@ public class AbilitySoundController : MonoBehaviour
         }
     }
 
-    void PlayClip(AudioClip clip)
+    void PlayClip(AudioClip[] clip)
     {
         if (audioSource != null && clip != null)
-            audioSource.PlayOneShot(clip);
+        {
+            int randomClip = Random.Range(0, clip.Length);
+            audioSource.PlayOneShot(clip[randomClip]);
+        }
     }
 }

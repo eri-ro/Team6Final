@@ -10,6 +10,16 @@ public class Checkpoint : MonoBehaviour
     public float checkpointSpinDuration = 3.0f;
 
     public int playerFallCount;
+
+    [Header("Sound")]
+    public AudioClip checkpointClip;
+
+    void Awake()
+    {
+        if (spawnPoint == null)
+            spawnPoint = transform;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Checkpoint")
@@ -26,12 +36,25 @@ public class Checkpoint : MonoBehaviour
             {
                 other.GetComponent<ParticleStopper>().stopParticles();
             }
+
+            // Check and see if checkpoint has a valid audioSource, then play the checkpoint sound from it
+            if (other.GetComponent<AudioSource>() != null && checkpointClip != null)
+            {
+                AudioSource audioSource;
+                audioSource = other.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(checkpointClip);
+            }
+
+
             // Disables the boxcollider so the checkpoint cannot be activated twice
             other.GetComponent<BoxCollider>().enabled = false;
         }
         else if (other.tag == "Killplane")
         {
-            gameObject.transform.position = spawnPoint.transform.position;
+            if (spawnPoint != null)
+                gameObject.transform.position = spawnPoint.position;
+            else
+                gameObject.transform.position = transform.position;
             playerFallCount++;
         }
         else if (other.tag == "Goal")
