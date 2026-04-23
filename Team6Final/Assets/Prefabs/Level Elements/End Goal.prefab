@@ -1259,7 +1259,7 @@ MonoBehaviour:
   _timerEndText: 
   _useEndText: 0
   _skipZero: 0
-  _playerPrefab: {fileID: 0}
+  _player: {fileID: 0}
   _abilityValue: 0
   _enablePlayerMovementOnFinish: 0
   _disablePlayerMovementOnFinish: 1
@@ -1424,7 +1424,7 @@ MonoBehaviour:
   _timerEndText: GO!
   _useEndText: 1
   _skipZero: 1
-  _playerPrefab: {fileID: 0}
+  _player: {fileID: 0}
   _abilityValue: 2
   _enablePlayerMovementOnFinish: 1
   _disablePlayerMovementOnFinish: 0
@@ -11686,6 +11686,7 @@ GameObject:
   - component: {fileID: 6735257947826012613}
   - component: {fileID: 2700211224930771360}
   - component: {fileID: 2191190278526309395}
+  - component: {fileID: 2014899354231373070}
   m_Layer: 0
   m_Name: ReturnToHub
   m_TagString: Untagged
@@ -11794,7 +11795,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2700211224930771360}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2014899354231373070}
+        m_TargetAssemblyTypeName: Win, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2014899354231373070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022212870517006318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb169c8c6a358f841807ecd3a8b4cef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8336499031407917331
 GameObject:
   m_ObjectHideFlags: 0

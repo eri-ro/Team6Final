@@ -88,4 +88,11 @@ public class PauseMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ToMainMenu()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+        SceneManager.LoadScene("UI_MainMenu");
+    }
 }
