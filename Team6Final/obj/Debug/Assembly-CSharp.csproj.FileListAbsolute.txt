@@ -1,0 +1,6 @@
+B:\dev\Team6Final\Team6Final\obj\Debug\Assembly-CSharp.csproj.AssemblyReference.cache
+B:\dev\Team6Final\Team6Final\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+B:\dev\Team6Final\Team6Final\obj\Debug\Assembly-CSharp.pdb
+B:\dev\Team6Final\Team6Final\Temp\bin\Debug\Assembly-CSharp.dll
+B:\dev\Team6Final\Team6Final\Temp\bin\Debug\Assembly-CSharp.pdb
+B:\dev\Team6Final\Team6Final\obj\Debug\Assembly-CSharp.dll

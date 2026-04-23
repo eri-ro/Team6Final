@@ -8,13 +8,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/UI_MainMenu.unity
     guid: 7a13c133c10ff524da9767992bbbd720
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Demo.unity
     guid: 0259ad0edcb9b7a4e80d33bca5416de6
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Hub Area.unity
     guid: 0bf35c6ac2f331844ac668eefb74d0d9
   - enabled: 1
     path: Assets/Scenes/Orchestra.unity
     guid: 668714699c63c8042b3d3add11321647
+  - enabled: 1
+    path: Assets/Scenes/Rock.unity
+    guid: 7b2b833d57ff4ab43a18eb3b393507f8
   m_configObjects: {}

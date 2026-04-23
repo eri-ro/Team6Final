@@ -44,6 +44,10 @@ public class LevelGoal : MonoBehaviour
     [Header("Sound")]
     [SerializeField] AudioClip _goalClip;
 
+    [Header("Hub progress")]
+    [SerializeField] LevelId _levelId = LevelId.None;
+    [SerializeField] bool _markCompleteOnGoal = true;
+
     private void OnTriggerEnter(Collider other)
     {
         //Checks to see if player entered collider
@@ -95,6 +99,9 @@ public class LevelGoal : MonoBehaviour
 
             if (_endAnimation != null)
                 _endAnimation.SetTrigger("LevelEnd");
+
+            if (_markCompleteOnGoal && _levelId != LevelId.None && LevelProgress.Instance != null)
+                LevelProgress.Instance.MarkComplete(_levelId);
         }
     }
 
