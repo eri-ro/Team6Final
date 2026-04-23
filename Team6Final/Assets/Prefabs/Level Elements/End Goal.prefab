@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: Return to Hub
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1259,7 +1259,7 @@ MonoBehaviour:
   _timerEndText: 
   _useEndText: 0
   _skipZero: 0
-  _playerPrefab: {fileID: 0}
+  _player: {fileID: 0}
   _abilityValue: 0
   _enablePlayerMovementOnFinish: 0
   _disablePlayerMovementOnFinish: 1
@@ -1424,7 +1424,7 @@ MonoBehaviour:
   _timerEndText: GO!
   _useEndText: 1
   _skipZero: 1
-  _playerPrefab: {fileID: 0}
+  _player: {fileID: 0}
   _abilityValue: 2
   _enablePlayerMovementOnFinish: 1
   _disablePlayerMovementOnFinish: 0

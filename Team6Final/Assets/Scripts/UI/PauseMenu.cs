@@ -81,11 +81,18 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         isPaused = false;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Hub Area");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ToMainMenu()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+        SceneManager.LoadScene("UI_MainMenu");
     }
 }
