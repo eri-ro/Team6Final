@@ -1,8 +1,28 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Global which way is up for the game. Physics.gravity is kept opposite to this so Unity physics matches the design.
 public class GravityWorld
 {
+    static GravityWorld()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single)
+            ResetToDefaultWorld();
+    }
+
+    // World +Y gravity and camera/controls. Call after a gravity shift, or on level load
+    public static void ResetToDefaultWorld()
+    {
+        Up = Vector3.up;
+        ControlUp = Vector3.up;
+        Physics.gravity = -Vector3.up * 9.81f;
+    }
+
     // Current up direction in world space. Starts as normal Unity: Y+.
     public static Vector3 Up { get; private set; } = Vector3.up;
 

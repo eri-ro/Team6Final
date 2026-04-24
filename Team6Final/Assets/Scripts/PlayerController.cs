@@ -92,12 +92,12 @@ public class PlayerController : MonoBehaviour
         _abilitySounds = GetComponent<AbilitySoundController>();
     }
 
-    // Lock the cursor for mouse-look when the scene starts.
+    // Lock the cursor for mouse-look. Match world +Y.
     void Start()
     {
+        GravityWorld.ResetToDefaultWorld();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        GravityWorld.SnapControlUpToPhysicsUp();
     }
 
     // UseAbility before TickControlUpAlignment so a gravity shift updates physics Up the same frame ControlUp begins blending toward it.
@@ -113,7 +113,13 @@ public class PlayerController : MonoBehaviour
         ChangeAbility();
     }
 
-    // Handles Escape, mouse look, WASD as a desired velocity, and third-person camera placement.
+    // Orbit camera after movement; avoids jitter when physics and render rates differ.
+    void LateUpdate()
+    {
+        UpdateOrbitCamera();
+    }
+
+    // Handles Escape, mouse look, WASD as a desired velocity, and move intent for the motor.
     void Move()
     {
         //// Escape toggles whether the cursor is locked.
@@ -173,8 +179,18 @@ public class PlayerController : MonoBehaviour
         // Tell the motor the desired horizontal speed; the motor runs in FixedUpdate and applies the Rigidbody.
         if (_motor != null)
             _motor.SetMoveVelocity(wishVel);
+    }
 
-        // Place the orbit camera behind the player, pulling in if a wall is in the way.
+    void UpdateOrbitCamera()
+    {
+        if (playerCamera == null || _rb == null)
+            return;
+
+        Vector3 controlUp = GravityWorld.ControlUp.normalized;
+        GravityAlignment.GetWalkForwardRight(transform, controlUp, out Vector3 forward, out Vector3 right);
+        Quaternion pitchRot = Quaternion.AngleAxis(_pitch, right);
+        Vector3 cameraLook = (pitchRot * forward).normalized;
+
         Vector3 focus = transform.position + controlUp * focusHeight;
         PlayerOrbitCamera.Place(
             playerCamera,

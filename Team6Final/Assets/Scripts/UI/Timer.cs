@@ -57,6 +57,9 @@ public class Timer : MonoBehaviour
     public AudioClip timerEndClip;
     public AudioSource audioSource;
 
+    // Only refresh TMP when the shown clock digits change (avoids string.Format + GC every frame = micro-stutter).
+    int _lastDisplayHash = int.MinValue;
+
     // Update is called once per frame
     void Update()
     {
@@ -125,7 +128,16 @@ public class Timer : MonoBehaviour
             if (minutes == 0 && _skipZero)
                 seconds++;
 
-            //Displays time in 00:00 format if _includeMinutes is true
+            int displayHash;
+            if (_includeMinutes)
+                displayHash = minutes * 100 + seconds;
+            else
+                displayHash = seconds;
+
+            if (displayHash == _lastDisplayHash)
+                return;
+
+            _lastDisplayHash = displayHash;
             if (_includeMinutes)
                 _timerText.text = _textBeforeTimer + string.Format("{0:00}:{1:00}", minutes, seconds);
             else
@@ -136,6 +148,7 @@ public class Timer : MonoBehaviour
     public void StartTimer()
     {
         _started = true;
+        _lastDisplayHash = int.MinValue;
     }
 
     public void StopTimer()
@@ -152,8 +165,18 @@ public class Timer : MonoBehaviour
     {
         if (_player != null)
         {
-            _player.GetComponent<PlayerMotor>().enabled = true;
-            _player.GetComponent<PlayerController>().ChangeAbility(abilityValue);
+            PlayerMotor motor = _player.GetComponent<PlayerMotor>();
+            if (motor != null)
+                motor.enabled = true;
+
+            PlayerController controller = _player.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                controller.enabled = true;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                controller.ChangeAbility(abilityValue);
+            }
         }
         else
         {
