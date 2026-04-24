@@ -17605,7 +17605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: ability
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3195083343317089272, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_Enabled
@@ -17661,7 +17661,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7665237756381243205, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8428758620258725931, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalRotation.w

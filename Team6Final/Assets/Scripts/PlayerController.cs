@@ -1,3 +1,4 @@
+//using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -141,8 +142,8 @@ public class PlayerController : MonoBehaviour
 
         if (lookEnabled)
         {
-            transform.Rotate(controlUp, Input.GetAxis("Mouse X") * lookSensitivity, Space.World);
-            float mouseY = Input.GetAxis("Mouse Y") * lookSensitivity;
+            transform.Rotate(controlUp, GetHorizontalInput() * lookSensitivity, Space.World);
+            float mouseY = GetVerticalInput() * lookSensitivity;
             _pitch += invertVerticalLook ? -mouseY : mouseY;
             _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
         }
@@ -193,7 +194,7 @@ public class PlayerController : MonoBehaviour
     // True on the frame the player presses the ability key.
     bool AbilityTriggerDown()
     {
-        return Input.GetKeyDown(abilityKey) || Input.GetKeyDown(KeyCode.JoystickButton0);
+        return Input.GetKeyDown(abilityKey) || Input.GetKeyDown(KeyCode.JoystickButton2);
     }
 
     // Calls the script that matches the current ability slot.
@@ -232,22 +233,22 @@ public class PlayerController : MonoBehaviour
     // Simple keyboard hotkeys to change which ability is selected.
     void ChangeAbility()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) || (Input.GetAxisRaw("Debug Horizontal") < 0))
         {
             ability = AbilityState.Dash;
             Debug.Log("Dash Selected");
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) || (Input.GetAxisRaw("Debug Vertical") < 0))
         {
             ability = AbilityState.HighJump;
             Debug.Log("High Jump Selected");
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) || (Input.GetAxisRaw("Debug Horizontal") > 0))
         {
             ability = AbilityState.GravityShift;
             Debug.Log("Gravity Shift Selected");
         }
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V) || (Input.GetAxisRaw("Debug Vertical") > 0))
         {
             ability = AbilityState.None;
             Debug.Log("None Selected");
@@ -271,5 +272,25 @@ public class PlayerController : MonoBehaviour
                 ability = AbilityState.GravityShift;
                 break;
         }
+    }
+
+    float GetHorizontalInput()
+    {
+        if (Input.GetAxis("Mouse X") != 0)
+            return Input.GetAxis("Mouse X");
+        else if (Input.GetAxis("Camera Vertical") != 0)
+            return Input.GetAxis("Camera Vertical"); 
+        else
+            return 0;
+    }
+
+    float GetVerticalInput()
+    {
+        if (Input.GetAxis("Mouse Y") != 0)
+            return Input.GetAxis("Mouse Y");
+        else if (Input.GetAxis("Camera Horizontal") != 0)
+            return Input.GetAxis("Camera Horizontal");  
+        else
+            return 0;
     }
 }
