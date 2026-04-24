@@ -4285,7 +4285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2400822e8c4e9f64fb229309be7eecd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hubSceneName: Hub Area
 --- !u!4 &520858286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 656664ecfe16d424a8a1e118d8d29e61, type: 3}
@@ -16493,6 +16492,10 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3838039886459245070, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5063353841287699982, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_Volume
       value: 0.715
@@ -16539,7 +16542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7665237756381243205, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3195083343317089272, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
