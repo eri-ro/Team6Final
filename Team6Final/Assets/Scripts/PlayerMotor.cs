@@ -46,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Joystick1Button0))
             _jumpPressed = true;
     }
 
