@@ -7,7 +7,7 @@ public class UI_MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadScene("Hub Area");
+        SceneManager.LoadScene("Orchestra");
     }
 
     public void QuitGame()

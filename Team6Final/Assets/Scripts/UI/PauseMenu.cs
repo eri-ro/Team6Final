@@ -35,7 +35,7 @@ public class PauseMenu : MonoBehaviour
         if (pauseMenu == null)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
             if (isPaused)
                 ResumeGame();
@@ -87,5 +87,12 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ToMainMenu()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+        SceneManager.LoadScene("UI_MainMenu");
     }
 }
