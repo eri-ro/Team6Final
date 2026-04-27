@@ -123,6 +123,19 @@ public class DashAbility : MonoBehaviour
         _playerTrail.emitting = false;
     }
 
+    // Used when respawning at a checkpoint so dash state and move speed are not left inconsistent
+    public void CancelDashForRespawn()
+    {
+        if (!isDashing)
+            return;
+        StopAllCoroutines();
+        isDashing = false;
+        if (playerController != null)
+            playerController.moveSpeed /= dashBoost;
+        if (_playerTrail != null)
+            _playerTrail.emitting = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Breakable" && isDashing)

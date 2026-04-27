@@ -48,7 +48,11 @@ public class Checkpoint : MonoBehaviour
         }
         else if (other.CompareTag("Killplane"))
         {
-            transform.position = spawnPoint != null ? spawnPoint.position : transform.position;
+            PlayerController controller = GetComponent<PlayerController>();
+            if (controller != null)
+                controller.ResetOrientationForCheckpointSpawn(spawnPoint);
+            else if (spawnPoint != null)
+                transform.position = spawnPoint.position;
             playerFallCount++;
         }
         else if (other.CompareTag("Goal"))

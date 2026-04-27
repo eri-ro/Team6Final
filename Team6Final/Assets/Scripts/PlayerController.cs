@@ -290,6 +290,58 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Call when respawning at a checkpoint. Resets world gravity, upright rotation, and look
+    public void ResetOrientationForCheckpointSpawn(Transform spawnPoint)
+    {
+        if (_dash != null)
+            _dash.CancelDashForRespawn();
+
+        GravityWorld.ResetToDefaultWorld();
+        _pitch = 0f;
+
+        if (spawnPoint != null)
+        {
+            Vector3 f = Vector3.ProjectOnPlane(spawnPoint.forward, Vector3.up);
+            if (f.sqrMagnitude < 1e-6f)
+                f = Vector3.ProjectOnPlane(spawnPoint.right, Vector3.up);
+            if (f.sqrMagnitude < 1e-6f)
+                f = Vector3.forward;
+            f.Normalize();
+            Quaternion rot = Quaternion.LookRotation(f, Vector3.up);
+            Vector3 pos = spawnPoint.position;
+
+            transform.SetPositionAndRotation(pos, rot);
+            if (_rb != null)
+            {
+                _rb.position = pos;
+                _rb.rotation = rot;
+                _rb.velocity = Vector3.zero;
+                _rb.angularVelocity = Vector3.zero;
+            }
+        }
+        else
+        {
+            Quaternion rot = Quaternion.identity;
+            transform.SetPositionAndRotation(transform.position, rot);
+            if (_rb != null)
+            {
+                _rb.rotation = rot;
+                _rb.velocity = Vector3.zero;
+                _rb.angularVelocity = Vector3.zero;
+            }
+        }
+
+        if (_motor != null)
+            _motor.ClearVelocity();
+        if (_rb != null)
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+
+        Physics.SyncTransforms();
+    }
+
     float GetHorizontalInput()
     {
         if (Input.GetAxis("Mouse X") != 0)
