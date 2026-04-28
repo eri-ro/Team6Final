@@ -82,6 +82,9 @@ public class PlayerController : MonoBehaviour
 
     AbilitySoundController _abilitySounds;
 
+    // Paused bool for disabling input while paused
+    public bool paused = false;
+
     // Grab references to other components on this GameObject.
     void Awake()
     {
@@ -105,7 +108,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !paused)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 #endif
         UseAbility();
@@ -216,7 +219,7 @@ public class PlayerController : MonoBehaviour
     // Calls the script that matches the current ability slot.
     void UseAbility()
     {
-        if (!AbilityTriggerDown())
+        if (!AbilityTriggerDown() && paused)
             return;
 
         bool success = false;
@@ -249,25 +252,28 @@ public class PlayerController : MonoBehaviour
     // Simple keyboard hotkeys to change which ability is selected.
     void ChangeAbility()
     {
-        if (Input.GetKeyDown(KeyCode.Z) || (Input.GetAxisRaw("Debug Horizontal") < 0))
+        if (!paused)
         {
-            ability = AbilityState.Dash;
-            Debug.Log("Dash Selected");
-        }
-        if (Input.GetKeyDown(KeyCode.X) || (Input.GetAxisRaw("Debug Vertical") < 0))
-        {
-            ability = AbilityState.HighJump;
-            Debug.Log("High Jump Selected");
-        }
-        if (Input.GetKeyDown(KeyCode.C) || (Input.GetAxisRaw("Debug Horizontal") > 0))
-        {
-            ability = AbilityState.GravityShift;
-            Debug.Log("Gravity Shift Selected");
-        }
-        if (Input.GetKeyDown(KeyCode.V) || (Input.GetAxisRaw("Debug Vertical") > 0))
-        {
-            ability = AbilityState.None;
-            Debug.Log("None Selected");
+            if (Input.GetKeyDown(KeyCode.Z) || (Input.GetAxisRaw("Debug Horizontal") < 0))
+            {
+                ability = AbilityState.Dash;
+                Debug.Log("Dash Selected");
+            }
+            if (Input.GetKeyDown(KeyCode.X) || (Input.GetAxisRaw("Debug Vertical") < 0))
+            {
+                ability = AbilityState.HighJump;
+                Debug.Log("High Jump Selected");
+            }
+            if (Input.GetKeyDown(KeyCode.C) || (Input.GetAxisRaw("Debug Horizontal") > 0))
+            {
+                ability = AbilityState.GravityShift;
+                Debug.Log("Gravity Shift Selected");
+            }
+            if (Input.GetKeyDown(KeyCode.V) || (Input.GetAxisRaw("Debug Vertical") > 0))
+            {
+                ability = AbilityState.None;
+                Debug.Log("None Selected");
+            }
         }
     }
 
