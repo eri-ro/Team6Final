@@ -44,9 +44,12 @@ public class PlayerMotor : MonoBehaviour
     // True after a high jump until we land; used only to soften downward acceleration (glide).
     bool _highJumpSlowFallActive;
 
+    // Paused bool for disabling input while paused
+    public bool paused = false;
+
     void Update()
     {
-        if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Joystick1Button0))
+        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Joystick1Button0)) && !paused)
             _jumpPressed = true;
     }
 

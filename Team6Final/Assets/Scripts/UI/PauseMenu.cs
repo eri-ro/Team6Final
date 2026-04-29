@@ -1,15 +1,25 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 // Attach to the root Canvas (or any always-active object)
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
 
+    public GameObject pauseFirstButton;
+    //public GameObject settingsFirstButton;
+    public GameObject settingsClosedButton;
+
+
     public static bool isPaused;
 
     [Tooltip("Background music on an AudioSource")]
     public AudioSource musicPlayer;
+
+    // Player movement scripts that take input
+    private PlayerController playerController;
+    private PlayerMotor playerMotor;
 
     void Awake()
     {
@@ -22,6 +32,9 @@ public class PauseMenu : MonoBehaviour
 
         if (pauseMenu == null)
             Debug.LogError("PauseMenu: assign pause panel or add a child named PauseMenu.", this);
+
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerMotor = GameObject.Find("Player").GetComponent<PlayerMotor>();
     }
 
     void Start()
@@ -42,6 +55,10 @@ public class PauseMenu : MonoBehaviour
             else
                 PauseGame();
         }
+
+        // Set the paused bools in each script to the same here
+        playerController.paused = isPaused;
+        playerMotor.paused = isPaused;
     }
 
     public void PauseGame()
@@ -55,6 +72,9 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         if (musicPlayer != null)
             musicPlayer.Pause();
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(pauseFirstButton);
     }
 
     public void ResumeGame()
