@@ -589,6 +589,8 @@ MonoBehaviour:
   _timeTakenText: {fileID: 3922212848930751928}
   _fallCountText: {fileID: 6999753104292425692}
   _goalClip: {fileID: 8300000, guid: a5744cfce2930ce4bb8b8788b9e912af, type: 3}
+  _levelId: 0
+  _markCompleteOnGoal: 1
 --- !u!95 &6727631472556539945
 Animator:
   serializedVersion: 5
@@ -1017,7 +1019,7 @@ AudioSource:
   m_GameObject: {fileID: 4259511010851908233}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2083281838058050134, guid: e11eb56e6f923ec439428d3358fe4359, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1

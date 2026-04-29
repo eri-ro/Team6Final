@@ -81,9 +81,21 @@ public class PlayerController : MonoBehaviour
     HighJumpAbility _highJump;
 
     AbilitySoundController _abilitySounds;
+    WalkingSoundPlayer _walkSounds;
+    
+    //Stuff Needed for player animation
+    public Animator playerAnimator;
+
+    bool isGrounded; 
+    // Note! right now isGrounded does NOT work with altered gravity,
+    // but we shouldn't need that functionality at the moment
+    public float groundCheckDistance = 1.2f;
 
     // Paused bool for disabling input while paused
     public bool paused = false;
+
+    // CanPause to prevent pausing
+    public bool canPause = true;
 
     // Grab references to other components on this GameObject.
     void Awake()
@@ -94,6 +106,7 @@ public class PlayerController : MonoBehaviour
         _dash = GetComponent<DashAbility>();
         _highJump = GetComponent<HighJumpAbility>();
         _abilitySounds = GetComponent<AbilitySoundController>();
+        _walkSounds = GetComponent<WalkingSoundPlayer>();
     }
 
     // Lock the cursor for mouse-look. Match world +Y.
@@ -115,6 +128,8 @@ public class PlayerController : MonoBehaviour
         GravityWorld.TickControlUpAlignment(Time.deltaTime, gravityControlUpAlignSpeed);
         Move();
         ChangeAbility();
+
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance);
     }
 
     // Orbit camera after movement; avoids jitter when physics and render rates differ.
@@ -175,6 +190,21 @@ public class PlayerController : MonoBehaviour
             wishVel = (right * h + forward * v).normalized * moveSpeed;
         }
 
+        //Checks if the player is moving, and makes the player do the walk animation if true
+        bool isMoving = wishVel != Vector3.zero;
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("isRunning", isMoving);
+            if (isMoving && isGrounded)
+            {
+                _walkSounds.PlayWalking();
+            }
+            else
+            {
+                _walkSounds.StopWalking();
+            }
+        }
+
         // Motor splits velocity along physics Up; keep horizontal wish on that plane while ControlUp blends.
         wishVel = Vector3.ProjectOnPlane(wishVel, physicsUp);
         if (wishVel.sqrMagnitude > 1e-8f)
@@ -219,21 +249,27 @@ public class PlayerController : MonoBehaviour
     // Calls the script that matches the current ability slot.
     void UseAbility()
     {
-        if (!AbilityTriggerDown() && paused)
+        if (!AbilityTriggerDown() || paused)
             return;
 
         bool success = false;
-
+        string abilityTrigger = "None";
         switch (ability)
         {
             case AbilityState.Dash:
                 if (_dash != null)
+                {
                     success = _dash.UseAbility();
+                    abilityTrigger = "Guitar";
+                }
                 break;
 
             case AbilityState.HighJump:
                 if (_highJump != null)
+                {
                     success = _highJump.UseAbility();
+                    abilityTrigger = "Trumpet";
+                }
                 break;
 
             case AbilityState.GravityShift:
@@ -245,8 +281,11 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if (success && _abilitySounds != null)
+        if (success && _abilitySounds != null && playerAnimator != null)
+        {
             _abilitySounds.PlayAbilitySound(ability);
+            playerAnimator.SetTrigger(abilityTrigger);
+        } 
     }
 
     // Simple keyboard hotkeys to change which ability is selected.

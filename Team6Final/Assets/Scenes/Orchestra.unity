@@ -874,11 +874,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.056
+      value: 0.111
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.428
+      value: -0.042
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -886,19 +886,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.00000045914192
+      value: -0.00000056577824
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.9998078
+      value: -0.9901612
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.019607598
+      value: 0.13993143
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000566244
+      value: 0.0000004693864
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -910,7 +910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -2.2470093
+      value: 16.087997
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 24397f1a31055da47b6f67111b0b154c, type: 3}
       propertyPath: m_Materials.Array.size
@@ -7189,7 +7189,7 @@ AudioSource:
   m_GameObject: {fileID: 755043843}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8300596562887113727, guid: e11eb56e6f923ec439428d3358fe4359, type: 2}
   m_audioClip: {fileID: 8300000, guid: 2ce768894410dc84f9a5bdaff9fa3f85, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.511
@@ -17559,7 +17559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 28
+      value: 25.95
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalPosition.y

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 // Attach to the root Canvas (or any always-active object)
 public class PauseMenu : MonoBehaviour
@@ -9,8 +10,8 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseFirstButton;
     //public GameObject settingsFirstButton;
-    public GameObject settingsClosedButton;
-
+    public GameObject settingsClosedButtonObject;
+    public Button settingsClosedButton;
 
     public static bool isPaused;
 
@@ -20,6 +21,9 @@ public class PauseMenu : MonoBehaviour
     // Player movement scripts that take input
     private PlayerController playerController;
     private PlayerMotor playerMotor;
+
+    // Tracks if player is in settings menu
+    bool inSettings = false;
 
     void Awake()
     {
@@ -51,9 +55,20 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
             if (isPaused)
-                ResumeGame();
+            {
+                if (inSettings)
+                {
+                    settingsClosedButton.onClick.Invoke();
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            }
             else
+            {
                 PauseGame();
+            }
         }
 
         // Set the paused bools in each script to the same here
@@ -115,4 +130,18 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         SceneManager.LoadScene("UI_MainMenu");
     }
+
+    public void ToggleSettings(bool value)
+    {
+        inSettings = value;
+        if (inSettings)
+        {
+            EventSystem.current.SetSelectedGameObject(settingsClosedButtonObject);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(pauseFirstButton);
+        }
+    }
+
 }
