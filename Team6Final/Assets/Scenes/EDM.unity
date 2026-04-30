@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: ccc57f9de628c474980691f543aa5749, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -2115,6 +2115,10 @@ PrefabInstance:
       propertyPath: _player
       value: 
       objectReference: {fileID: 912340270}
+    - target: {fileID: 4525471860477550057, guid: d1c18fcbb751d944dbf51a1d84a278d8, type: 3}
+      propertyPath: _remainingTime
+      value: 120
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5768,7 +5772,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 8300596562887113727, guid: e11eb56e6f923ec439428d3358fe4359, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 2ce768894410dc84f9a5bdaff9fa3f85, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 8826c682742e4154d9b39ec5b4013918, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.511
   m_Pitch: 1
