@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 6f;
 
     // Mouse sensitivity for turning and looking up/down.
+    [Range(0.1f, 3f)]
     public float lookSensitivity = 2f;
 
     // Default distance from the focus point to the camera along the view ray.
@@ -96,6 +97,15 @@ public class PlayerController : MonoBehaviour
 
     // CanPause to prevent pausing
     public bool canPause = true;
+
+    public float inverCameraXMultiplier;
+
+    public float inverCameraYMultiplier;
+
+    public bool isCameraXInverted;
+    public bool isCameraYInverted;
+
+    public bool abilityChangeEnabled = false;
 
     // Grab references to other components on this GameObject.
     void Awake()
@@ -291,7 +301,7 @@ public class PlayerController : MonoBehaviour
     // Simple keyboard hotkeys to change which ability is selected.
     void ChangeAbility()
     {
-        if (!paused)
+        if (!paused && abilityChangeEnabled)
         {
             if (Input.GetKeyDown(KeyCode.Z) || (Input.GetAxisRaw("Debug Horizontal") < 0))
             {
@@ -390,9 +400,9 @@ public class PlayerController : MonoBehaviour
     float GetHorizontalInput()
     {
         if (Input.GetAxis("Mouse X") != 0)
-            return Input.GetAxis("Mouse X");
+            return Input.GetAxis("Mouse X") * inverCameraXMultiplier;
         else if (Input.GetAxis("Camera Vertical") != 0)
-            return Input.GetAxis("Camera Vertical"); 
+            return Input.GetAxis("Camera Vertical") * inverCameraXMultiplier; 
         else
             return 0;
     }
@@ -400,10 +410,34 @@ public class PlayerController : MonoBehaviour
     float GetVerticalInput()
     {
         if (Input.GetAxis("Mouse Y") != 0)
-            return Input.GetAxis("Mouse Y");
+            return Input.GetAxis("Mouse Y") * inverCameraYMultiplier;
         else if (Input.GetAxis("Camera Horizontal") != 0)
-            return Input.GetAxis("Camera Horizontal");  
+            return Input.GetAxis("Camera Horizontal") * inverCameraYMultiplier;  
         else
             return 0;
+    }
+
+    public void UpdateCameraSensitivity(float value)
+    {
+        lookSensitivity = value;
+        Debug.Log("Current value: "+ lookSensitivity);
+    }
+
+    public void InvertCameraX(bool value)
+    {
+        isCameraXInverted = value;
+        if (isCameraXInverted)
+            inverCameraXMultiplier = -1f;
+        else
+            inverCameraXMultiplier = 1f;
+    }
+
+    public void InvertCameraY(bool value)
+    {
+        isCameraYInverted = value;
+        if(isCameraYInverted)
+            inverCameraYMultiplier = -1f;
+        else
+            inverCameraYMultiplier  = 1f;
     }
 }
