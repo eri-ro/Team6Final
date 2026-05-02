@@ -176,8 +176,8 @@ public class PlayerController : MonoBehaviour
 
         if (lookEnabled)
         {
-            transform.Rotate(controlUp, GetHorizontalInput() * lookSensitivity, Space.World);
-            float mouseY = GetVerticalInput() * lookSensitivity;
+            transform.Rotate(controlUp, GetHorizontalInput() * lookSensitivity * inverCameraXMultiplier, Space.World);
+            float mouseY = GetVerticalInput() * lookSensitivity * inverCameraYMultiplier;
             _pitch += invertVerticalLook ? -mouseY : mouseY;
             _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
         }
@@ -400,9 +400,9 @@ public class PlayerController : MonoBehaviour
     float GetHorizontalInput()
     {
         if (Input.GetAxis("Mouse X") != 0)
-            return Input.GetAxis("Mouse X") * inverCameraXMultiplier;
+            return Input.GetAxis("Mouse X");
         else if (Input.GetAxis("Camera Vertical") != 0)
-            return Input.GetAxis("Camera Vertical") * inverCameraXMultiplier; 
+            return Input.GetAxis("Camera Vertical");
         else
             return 0;
     }
@@ -410,9 +410,9 @@ public class PlayerController : MonoBehaviour
     float GetVerticalInput()
     {
         if (Input.GetAxis("Mouse Y") != 0)
-            return Input.GetAxis("Mouse Y") * inverCameraYMultiplier;
+            return Input.GetAxis("Mouse Y");
         else if (Input.GetAxis("Camera Horizontal") != 0)
-            return Input.GetAxis("Camera Horizontal") * inverCameraYMultiplier;  
+            return Input.GetAxis("Camera Horizontal");
         else
             return 0;
     }
@@ -420,24 +420,20 @@ public class PlayerController : MonoBehaviour
     public void UpdateCameraSensitivity(float value)
     {
         lookSensitivity = value;
-        Debug.Log("Current value: "+ lookSensitivity);
+        //Debug.Log("Current value: "+ lookSensitivity);
     }
 
     public void InvertCameraX(bool value)
     {
         isCameraXInverted = value;
-        if (isCameraXInverted)
-            inverCameraXMultiplier = -1f;
-        else
-            inverCameraXMultiplier = 1f;
+        inverCameraXMultiplier = isCameraXInverted ? -1f : 1f;
+        //Debug.Log("Camera x mult: " + inverCameraXMultiplier);
     }
 
     public void InvertCameraY(bool value)
     {
         isCameraYInverted = value;
-        if(isCameraYInverted)
-            inverCameraYMultiplier = -1f;
-        else
-            inverCameraYMultiplier  = 1f;
+        inverCameraYMultiplier = isCameraYInverted ? -1f : 1f;
+        //Debug.Log("Camera y mult: " + inverCameraYMultiplier);
     }
 }

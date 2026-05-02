@@ -1228,10 +1228,6 @@ PrefabInstance:
       propertyPath: settingsClosedButton
       value: 
       objectReference: {fileID: 1541957845}
-    - target: {fileID: 866477564852020786, guid: faa06ec728eadb54b8b604efe5ed34da, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1208901371}
     - target: {fileID: 1711194098416337078, guid: faa06ec728eadb54b8b604efe5ed34da, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -6578,11 +6574,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1208901371 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1003667600766916121, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
-  m_PrefabInstance: {fileID: 1518001987}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1216243986
 GameObject:
   m_ObjectHideFlags: 0
@@ -8911,6 +8902,22 @@ PrefabInstance:
       objectReference: {fileID: 2080003490}
     - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: lookSensitivity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: isCameraXInverted
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: isCameraYInverted
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: inverCameraXMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: inverCameraYMultiplier
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3531777273360611728, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
