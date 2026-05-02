@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 6f;
 
     // Mouse sensitivity for turning and looking up/down.
+    [Range(0.1f, 3f)]
     public float lookSensitivity = 2f;
 
     // Default distance from the focus point to the camera along the view ray.
@@ -97,6 +98,15 @@ public class PlayerController : MonoBehaviour
     // CanPause to prevent pausing
     public bool canPause = true;
 
+    public float inverCameraXMultiplier;
+
+    public float inverCameraYMultiplier;
+
+    public bool isCameraXInverted;
+    public bool isCameraYInverted;
+
+    public bool abilityChangeEnabled = false;
+
     // Grab references to other components on this GameObject.
     void Awake()
     {
@@ -166,8 +176,8 @@ public class PlayerController : MonoBehaviour
 
         if (lookEnabled)
         {
-            transform.Rotate(controlUp, GetHorizontalInput() * lookSensitivity, Space.World);
-            float mouseY = GetVerticalInput() * lookSensitivity;
+            transform.Rotate(controlUp, GetHorizontalInput() * lookSensitivity * inverCameraXMultiplier, Space.World);
+            float mouseY = GetVerticalInput() * lookSensitivity * inverCameraYMultiplier;
             _pitch += invertVerticalLook ? -mouseY : mouseY;
             _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
         }
@@ -291,7 +301,7 @@ public class PlayerController : MonoBehaviour
     // Simple keyboard hotkeys to change which ability is selected.
     void ChangeAbility()
     {
-        if (!paused)
+        if (!paused && abilityChangeEnabled)
         {
             if (Input.GetKeyDown(KeyCode.Z) || (Input.GetAxisRaw("Debug Horizontal") < 0))
             {
@@ -392,7 +402,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Mouse X") != 0)
             return Input.GetAxis("Mouse X");
         else if (Input.GetAxis("Camera Vertical") != 0)
-            return Input.GetAxis("Camera Vertical"); 
+            return Input.GetAxis("Camera Vertical");
         else
             return 0;
     }
@@ -402,8 +412,28 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxis("Mouse Y") != 0)
             return Input.GetAxis("Mouse Y");
         else if (Input.GetAxis("Camera Horizontal") != 0)
-            return Input.GetAxis("Camera Horizontal");  
+            return Input.GetAxis("Camera Horizontal");
         else
             return 0;
+    }
+
+    public void UpdateCameraSensitivity(float value)
+    {
+        lookSensitivity = value;
+        //Debug.Log("Current value: "+ lookSensitivity);
+    }
+
+    public void InvertCameraX(bool value)
+    {
+        isCameraXInverted = value;
+        inverCameraXMultiplier = isCameraXInverted ? -1f : 1f;
+        //Debug.Log("Camera x mult: " + inverCameraXMultiplier);
+    }
+
+    public void InvertCameraY(bool value)
+    {
+        isCameraYInverted = value;
+        inverCameraYMultiplier = isCameraYInverted ? -1f : 1f;
+        //Debug.Log("Camera y mult: " + inverCameraYMultiplier);
     }
 }
