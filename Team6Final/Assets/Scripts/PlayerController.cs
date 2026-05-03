@@ -95,12 +95,12 @@ public class PlayerController : MonoBehaviour
     // Paused bool for disabling input while paused
     public bool paused = false;
 
-    // CanPause to prevent pausing
-    public bool canPause = true;
+    // CanMove to prevent moving
+    public bool canMove = true;
 
-    public float inverCameraXMultiplier;
+    public float inverCameraXMultiplier = 1f;
 
-    public float inverCameraYMultiplier;
+    public float inverCameraYMultiplier = 1f;
 
     public bool isCameraXInverted;
     public bool isCameraYInverted;
@@ -134,11 +134,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab) && !paused)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 #endif
-        UseAbility();
-        GravityWorld.TickControlUpAlignment(Time.deltaTime, gravityControlUpAlignSpeed);
-        Move();
-        ChangeAbility();
-
+        
+        if (canMove)
+        {
+            UseAbility();
+            GravityWorld.TickControlUpAlignment(Time.deltaTime, gravityControlUpAlignSpeed);
+            Move();
+            ChangeAbility();
+        }
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance);
     }
 

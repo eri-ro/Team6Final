@@ -304,6 +304,10 @@ PrefabInstance:
       value: SuspendedPlatformCorner_Texture
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6fac386e9727e7448a25bda2845145a0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6fac386e9727e7448a25bda2845145a0, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -615,6 +619,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SuspendedPlatformShort_Textured
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4b7475eec5c88584684cb1534d1395ca, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -859,7 +867,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.70710653
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalRotation.x
@@ -867,7 +875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.70710707
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalRotation.z
@@ -879,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 2121626832224708712, guid: 17bcac0ae8d4757498b2c125f62c81e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1953,7 +1961,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: ability
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: canMove
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: invertVerticalLook
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: cameraObstacleMask.m_Bits
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1969,7 +1989,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8707856
+      value: -0.7138628
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1977,7 +1997,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.49166313
+      value: -0.7002856
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1989,7 +2009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 58.9
+      value: 88.9
       objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -2425,6 +2445,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_Name
       value: SuspendedPlatform_Texture (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_TagString
@@ -3851,6 +3875,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 754769638135649020, guid: faa06ec728eadb54b8b604efe5ed34da, type: 3}
+      propertyPath: canPause
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 754769638135649020, guid: faa06ec728eadb54b8b604efe5ed34da, type: 3}
       propertyPath: musicPlayer
       value: 
       objectReference: {fileID: 1346763397}
@@ -5136,6 +5164,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_Name
       value: SuspendedPlatform_Texture
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6706,6 +6738,10 @@ PrefabInstance:
       value: SuspendedPlatformCorner_Texture (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6fac386e9727e7448a25bda2845145a0, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6fac386e9727e7448a25bda2845145a0, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -7027,6 +7063,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_Name
       value: SuspendedPlatform_Texture (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_TagString
@@ -7681,7 +7721,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.4198113, g: 0.80518943, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -9679,6 +9719,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_Name
       value: SuspendedPlatform_Texture (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d89eb5486306ec948bebb173142e744a, type: 3}
       propertyPath: m_TagString

@@ -3,7 +3,17 @@ guid: 1293c7d3bbfa94c48bf59424d70e4d28
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gradient Atlas
+    second: {fileID: 2100000, guid: 5dc084f501799754da458790bfea758b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: openPBR_shader1.001
+    second: {fileID: 2100000, guid: 2840a13e8ccd2f242aa11ee0a773c0d6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

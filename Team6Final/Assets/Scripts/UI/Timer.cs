@@ -27,10 +27,7 @@ public class Timer : MonoBehaviour
     [SerializeField]
     bool _skipZero = false;
 
-    [Header("Connect To Player")]
-    [SerializeField]
-    GameObject _player;
-
+    [Header("Player Settings on completion")]
     [SerializeField]
     [Tooltip("0 = none, 1 = dash, 2 = highjump, 3 = gravityshift")]
     int _abilityValue = 0;
@@ -57,9 +54,28 @@ public class Timer : MonoBehaviour
     public AudioClip timerEndClip;
     public AudioSource audioSource;
 
+    GameObject _player;
+    PauseMenu _pauseMenu;
+
     // Only refresh TMP when the shown clock digits change (avoids string.Format + GC every frame = micro-stutter).
     int _lastDisplayHash = int.MinValue;
 
+    private void Awake()
+    {
+        //Looks for Player and PauseMenu objects in hierarchy of scene. Should only be one player and pause menu, and if none it returns error log
+        _player = GameObject.FindWithTag("Player");
+        _pauseMenu = GameObject.FindWithTag("PauseMenu").GetComponent<PauseMenu>();
+        if (_player == null)
+        {
+            Debug.Log("Please put the Player prefab somewhere in the scene!");
+            return;
+        }
+        if (_pauseMenu == null)
+        {
+            Debug.Log("Please put the PauseMenu prefab somewhere in the scene!");
+            return;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -165,22 +181,15 @@ public class Timer : MonoBehaviour
     {
         if (_player != null)
         {
-            PlayerMotor motor = _player.GetComponent<PlayerMotor>();
-            if (motor != null)
-                motor.enabled = true;
-
-            PlayerController controller = _player.GetComponent<PlayerController>();
-            if (controller != null)
-            {
-                controller.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                controller.ChangeAbility(abilityValue);
-            }
+            _player.GetComponent<PlayerController>().canMove = true;
         }
         else
         {
             Debug.Log("Connect the player GameObject to the Timer to disable their movement!", this);
+        }
+        if (_pauseMenu != null)
+        {
+            _pauseMenu.canPause = true;
         }
     }
     //Stops all player movement and unlocks the mouse, used whenever the player game overs. Also hides the timer if there is no end text
@@ -195,8 +204,13 @@ public class Timer : MonoBehaviour
         }
 
         _player.GetComponent<PlayerMotor>().ClearVelocity();
-        _player.GetComponent<PlayerController>().enabled = false;
-        _player.GetComponent<PlayerMotor>().enabled = false;
+        _player.GetComponent<PlayerController>().canMove = false;
+
+        if (_pauseMenu != null)
+        {
+            _pauseMenu.canPause = false;
+        }
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         if (hideTimer)

@@ -9,6 +9,7 @@ TagManager:
   - Checkpoint
   - Killplane
   - Goal
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

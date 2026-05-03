@@ -25,6 +25,8 @@ public class PauseMenu : MonoBehaviour
     // Tracks if player is in settings menu
     bool inSettings = false;
 
+    public bool canPause;
+
     void Awake()
     {
         if (pauseMenu == null)
@@ -52,7 +54,7 @@ public class PauseMenu : MonoBehaviour
         if (pauseMenu == null)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
+        if (canPause && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7)))
         {
             if (isPaused)
             {

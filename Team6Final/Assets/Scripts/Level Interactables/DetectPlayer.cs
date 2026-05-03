@@ -6,8 +6,8 @@ public class DetectPlayer : MonoBehaviour
 {
     [SerializeField]
     Animator animator;
-    
-
+    [SerializeField]
+    AudioSource audioSource;
     private void OnTriggerEnter(Collider other)
     {
         //Checks to see if player entered collider
@@ -18,7 +18,10 @@ public class DetectPlayer : MonoBehaviour
             {
                 animator.SetTrigger("PlayerEntered");
             }
-
+            if (audioSource != null)
+            {
+                audioSource.Play();
+            }
         }
     }
 }
