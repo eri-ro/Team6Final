@@ -24,6 +24,14 @@ public class PlayerMotor : MonoBehaviour
     [Range(0.15f, 0.85f)]
     public float minGroundNormalDotUp = 0.35f;
 
+    [Tooltip("Seconds after leaving the ground where a jump still counts (fixes edge/off-by-one-frame jumps).")]
+    [Range(0f, 0.25f)]
+    public float coyoteJumpGraceSeconds = 0.12f;
+
+    [Tooltip("Extra down-cast from the feet shifted opposite to move direction so the probe can still see the ledge while running off (0 = off).")]
+    [Range(0f, 0.35f)]
+    public float edgeGroundAssistOffset = 0.18f;
+
     [Tooltip("Contacts closer to horizontal than this vs up are treated as walls — allows horizontal sliding along them.")]
     [Range(0.1f, 0.9f)]
     public float wallContactNormalDotThreshold = 0.55f;
@@ -43,6 +51,9 @@ public class PlayerMotor : MonoBehaviour
 
     // True after a high jump until we land; used only to soften downward acceleration (glide).
     bool _highJumpSlowFallActive;
+
+    // Last FixedUpdate time we had valid ground under the feet.
+    float _lastGroundedFixedTime = -10000f;
 
     // Paused bool for disabling input while paused
     public bool paused = false;
@@ -122,6 +133,25 @@ public class PlayerMotor : MonoBehaviour
         // Ray must be long enough to reach the floor from the feet; too short = never grounded.
         float dist = groundProbeExtraDistance + Physics.defaultContactOffset * 2f + 0.12f;
 
+        if (RaycastWalkableGround(rayStart, up, dist))
+            return true;
+
+        if (edgeGroundAssistOffset > 0.001f)
+        {
+            Vector3 planarWish = Vector3.ProjectOnPlane(_wishPlanarVelocity, up);
+            if (planarWish.sqrMagnitude > 0.04f)
+            {
+                Vector3 ledgeAssistStart = rayStart - planarWish.normalized * edgeGroundAssistOffset;
+                if (RaycastWalkableGround(ledgeAssistStart, up, dist))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool RaycastWalkableGround(Vector3 rayStart, Vector3 up, float dist)
+    {
         int count = Physics.RaycastNonAlloc(rayStart, -up, _groundHits, dist, ~0, QueryTriggerInteraction.Ignore);
         if (count <= 0)
             return false;
@@ -205,6 +235,12 @@ public class PlayerMotor : MonoBehaviour
 
         bool grounded = IsGroundedForLogic();
         if (grounded)
+            _lastGroundedFixedTime = Time.fixedTime;
+
+        bool canJump = grounded ||
+                         (Time.fixedTime - _lastGroundedFixedTime) <= coyoteJumpGraceSeconds;
+
+        if (grounded)
         {
             _highJumpSlowFallActive = false;
             // Kill downward speed into the floor so we do not sink.
@@ -223,7 +259,7 @@ public class PlayerMotor : MonoBehaviour
 
         if (_jumpPressed)
         {
-            if (grounded)
+            if (canJump)
                 vel += up * jumpForce;
             _jumpPressed = false;
         }
