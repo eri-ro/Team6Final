@@ -19,6 +19,8 @@ public class HubLevelCompletionDisplay : MonoBehaviour
     [SerializeField] GameObject _demoIncompleteVisual;
     [SerializeField] GameObject _edmIncompleteVisual;
 
+    [SerializeField] GameObject endingPortal;
+
     public int levelsCompleted = 0;
     void Start()
     {
@@ -44,6 +46,11 @@ public class HubLevelCompletionDisplay : MonoBehaviour
                 player.transform.position = this.transform.position;
             }
         }
+
+        if (p.IsComplete(LevelId.Rock) && p.IsComplete(LevelId.Orchestra) && p.IsComplete(LevelId.EDM))
+            endingPortal.SetActive(true);
+        else
+            endingPortal.SetActive(false);
     }
 
     static int SetPair(GameObject complete, GameObject incomplete, bool levelIsComplete)
