@@ -19,6 +19,8 @@ public class HubLevelCompletionDisplay : MonoBehaviour
     [SerializeField] GameObject _demoIncompleteVisual;
     [SerializeField] GameObject _edmIncompleteVisual;
 
+    [SerializeField] GameObject endingPortal;
+
     public int levelsCompleted = 0;
     void Start()
     {
@@ -31,12 +33,12 @@ public class HubLevelCompletionDisplay : MonoBehaviour
             return;
 
         LevelProgress p = LevelProgress.Instance;
-        levelsCompleted += SetPair(_orchestraCompleteVisual, _orchestraIncompleteVisual, p.IsComplete(LevelId.Orchestra));
-        levelsCompleted += SetPair(_rockCompleteVisual, _rockIncompleteVisual, p.IsComplete(LevelId.Rock));
-        levelsCompleted += SetPair(_demoCompleteVisual, _demoIncompleteVisual, p.IsComplete(LevelId.Demo));
-        levelsCompleted += SetPair(_edmCompleteVisual, _edmIncompleteVisual, p.IsComplete(LevelId.EDM));
+        SetPair(_orchestraCompleteVisual, _orchestraIncompleteVisual, p.IsComplete(LevelId.Orchestra));
+        SetPair(_rockCompleteVisual, _rockIncompleteVisual, p.IsComplete(LevelId.Rock));
+        SetPair(_demoCompleteVisual, _demoIncompleteVisual, p.IsComplete(LevelId.Demo));
+        SetPair(_edmCompleteVisual, _edmIncompleteVisual, p.IsComplete(LevelId.EDM));
 
-        if (levelsCompleted > 0)
+        if (p.IsComplete(LevelId.Rock) || p.IsComplete(LevelId.Orchestra) || p.IsComplete(LevelId.EDM))
         {
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null)
@@ -44,18 +46,20 @@ public class HubLevelCompletionDisplay : MonoBehaviour
                 player.transform.position = this.transform.position;
             }
         }
+
+        if (p.IsComplete(LevelId.Rock) && p.IsComplete(LevelId.Orchestra) && p.IsComplete(LevelId.EDM))
+            endingPortal.SetActive(true);
+        else
+            endingPortal.SetActive(false);
     }
 
-    static int SetPair(GameObject complete, GameObject incomplete, bool levelIsComplete)
+    static void SetPair(GameObject complete, GameObject incomplete, bool levelIsComplete)
     {
-        int result = 0;
         if (complete != null)
         {
             complete.SetActive(levelIsComplete);
-            result = 1;
         }
         if (incomplete != null)
             incomplete.SetActive(!levelIsComplete);
-        return result;
     }
 }
