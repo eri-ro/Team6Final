@@ -3824,6 +3824,10 @@ PrefabInstance:
       propertyPath: playerAnimator
       value: 
       objectReference: {fileID: 2098518044}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: gravityControlUpAlignSpeed
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3531777273360611728, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_Depth
       value: 1

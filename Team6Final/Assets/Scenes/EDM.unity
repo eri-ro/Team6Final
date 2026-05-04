@@ -1975,6 +1975,14 @@ PrefabInstance:
       propertyPath: cameraObstacleMask.m_Bits
       value: 51
       objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: gravityControlUpAlignSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880921572298274300, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
+      propertyPath: gravityControlUpBlendTimeSeconds
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6611733698702568412, guid: c78baf193be2fc545a8977cefc98f32e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.565
