@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Win : MonoBehaviour
+public class LevelWin : MonoBehaviour
 {
-    public void LoadScene()
+    public void Restart()
     {
-        SceneManager.LoadScene("UI_MainMenu");
+        SceneManager.LoadScene("Hub Area");
     }
 }
