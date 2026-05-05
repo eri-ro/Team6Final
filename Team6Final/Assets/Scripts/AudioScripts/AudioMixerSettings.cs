@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -18,6 +19,10 @@ public class AudioMixerSettings : MonoBehaviour
 
     void Start()
     {
+        if (!PlayerPrefs.HasKey(MASTER))
+        {
+            InitializeVolumeSettings();
+        }
         masterSlider.value = PlayerPrefs.GetFloat(MASTER);
         sfxSlider.value = PlayerPrefs.GetFloat(SFX);
         musicSlider.value = PlayerPrefs.GetFloat(MUSIC);
@@ -25,6 +30,7 @@ public class AudioMixerSettings : MonoBehaviour
         SetMasterVolume(masterSlider.value);
         SetSFXVolume(sfxSlider.value);
         SetMusicVolume(musicSlider.value);
+        
     }
 
     public void SetMasterVolume(float value)
@@ -50,5 +56,12 @@ public class AudioMixerSettings : MonoBehaviour
         value = Mathf.Clamp(value, 0.0001f, 1f);
         float dB = Mathf.Log10(value) * 20f;
         audioMixer.SetFloat(name, dB);
+    }
+
+    void InitializeVolumeSettings()
+    {
+        PlayerPrefs.SetFloat(MASTER, 1);
+        PlayerPrefs.SetFloat(SFX, 1);
+        PlayerPrefs.SetFloat(MUSIC, 1);
     }
 }
