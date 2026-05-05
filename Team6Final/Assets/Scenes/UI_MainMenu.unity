@@ -714,9 +714,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.435849, g: 0.66046506, b: 1, a: 1}
-    m_PressedColor: {r: 0.2175934, g: 0.4048118, b: 0.690566, a: 1}
-    m_SelectedColor: {r: 0.1566037, g: 0.4904482, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.5294118, g: 0.39607844, b: 0.5411765, a: 1}
+    m_PressedColor: {r: 0.3372549, g: 0.16862746, b: 0.35686275, a: 1}
+    m_SelectedColor: {r: 0.5294118, g: 0.39607847, b: 0.5411765, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1027,8 +1027,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
+  m_sharedMaterial: {fileID: -3328383529679310629, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1236,8 +1236,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: How to Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
+  m_sharedMaterial: {fileID: -3328383529679310629, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1370,7 +1370,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Stardust Fusion fest
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2564c088de82cd84998f51091fe9812d, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1434,7 +1434,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1414312154
@@ -1575,9 +1575,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.435849, g: 0.66046506, b: 1, a: 1}
-    m_PressedColor: {r: 0.2175934, g: 0.4048118, b: 0.690566, a: 1}
-    m_SelectedColor: {r: 0.1566037, g: 0.4904482, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.5294118, g: 0.39607844, b: 0.5411765, a: 1}
+    m_PressedColor: {r: 0.3372549, g: 0.16862746, b: 0.35686275, a: 1}
+    m_SelectedColor: {r: 0.5294118, g: 0.39607847, b: 0.5411765, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1900,9 +1900,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.435849, g: 0.66046506, b: 1, a: 1}
-    m_PressedColor: {r: 0.2175934, g: 0.4048118, b: 0.690566, a: 1}
-    m_SelectedColor: {r: 0.1566037, g: 0.4904482, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.5294118, g: 0.39607844, b: 0.5411765, a: 1}
+    m_PressedColor: {r: 0.3372549, g: 0.16862746, b: 0.35686275, a: 1}
+    m_SelectedColor: {r: 0.5294118, g: 0.39607847, b: 0.5411765, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2077,7 +2077,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Stardust Fusion fest
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2564c088de82cd84998f51091fe9812d, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2141,7 +2141,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1802887687
@@ -2404,8 +2404,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Quit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
+  m_sharedMaterial: {fileID: -3328383529679310629, guid: e80d47179e7ea2e4da09dcaf8aa80c96, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
