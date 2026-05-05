@@ -21,7 +21,7 @@ public class HubLevelCompletionDisplay : MonoBehaviour
 
     [SerializeField] GameObject endingPortal;
 
-    public int levelsCompleted = 0;
+    [SerializeField] GameObject instructionText;
     void Start()
     {
         Apply();
@@ -44,6 +44,7 @@ public class HubLevelCompletionDisplay : MonoBehaviour
             if (player != null)
             {
                 player.transform.position = this.transform.position;
+                instructionText.SetActive(false);
             }
         }
 
